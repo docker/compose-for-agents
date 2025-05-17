@@ -33,7 +33,7 @@ agents:
     tools:
       - mcp/notion:API-post-page
       - mcp/notion:API-post-search
-    model: o3
+    model: gpt-4.1-mini
     model_provider: openai
 
   writer:
@@ -61,6 +61,13 @@ teams:
       - Ask your team mate to find the issues that are open
       - Tell the writer the summarize them
       - Create a Notion page with the current date and an emoji represent the sentiment as title.
+
+      When communicating with the writer, be very explicit about the criteria for its output,
+      including length, structure, formatting, and other constraints. Remind the
+      writer to use Markdown format.
+
+      Accept the writer's first response and do not ask it to redo the work,
+      even if it is imperfect. If it needs correction, do it yourself.
 
       Use your team mates to perform all the required tasks, coordinate between them.
     model_provider: openai
