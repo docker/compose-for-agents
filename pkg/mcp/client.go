@@ -103,6 +103,10 @@ func (cl *Client) CallTool(ctx context.Context, name string, args map[string]any
 		return nil, fmt.Errorf("calling tool %s on %s: %w", name, cl.image, err)
 	}
 
+	if name == "list_issues" {
+		result.Content[0] = slimListIssuesOutput(result.Content[0])
+	}
+
 	return result, nil
 }
 
