@@ -38,7 +38,7 @@ pandas==2.2.3
 peewee==3.18.1
 platformdirs==4.3.8
 primp==0.15.0
-protobuf==5.29.4
+protobuf==5.29.5
 pycparser==2.22
 pydantic==2.11.4
 pydantic-settings==2.9.1
