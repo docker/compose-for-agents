@@ -14,9 +14,10 @@
 
 """LLM Auditor for verifying & refining LLM-generated answers using the web."""
 
-from . import agent
 import os
-import logging, litellm
+import logging
+from . import agent
+
 # Set the base URL for the OpenAI API to the Docker Model Runner URL
 os.environ.setdefault("OPENAI_BASE_URL", os.getenv("DOCKER-MODEL-RUNNER_URL"))
 # Set the API key to a dummy value since it's not used
@@ -29,8 +30,5 @@ logging.basicConfig(
     force=True,                                  # override ADK defaults
 )
 logging.getLogger("google.adk").setLevel(logging.INFO)
-logging.getLogger("LiteLLM").setLevel(logging.WARNING)  # Much less verbose
-logging.getLogger("litellm").setLevel(logging.WARNING)  # Also reduce this
 logging.getLogger("httpx").setLevel(logging.WARNING)    # Reduce HTTP logs
 logging.getLogger("httpcore").setLevel(logging.WARNING) # Reduce HTTP core logs
-litellm.set_verbose = False                      # Disable raw HTTP logs
