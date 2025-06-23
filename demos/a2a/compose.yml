@@ -1,9 +1,16 @@
 services:
+
+  auditor-a2a:
+    build:
+      target: auditor-agent
+    ports:
+      - "8000:8000"
+
   critic-agent-a2a:
     build:
       target: critic-agent
     ports:
-      - "8001:8001"
+      - "8001:80"
     environment:
       - MCPGATEWAY_ENDPOINT=http://mcp-gateway:8811/sse
     extra_hosts:

@@ -14,7 +14,7 @@ tasks:
   # Docker Compose commands
   up:
     desc: Start services with docker-compose
-    cmd: docker compose -f demos/a2a/compose.yml up --build --wait
+    cmd: docker compose -f demos/a2a/compose.yml up --build
 
   down:
     desc: Stop and remove containers
@@ -23,7 +23,7 @@ tasks:
   test:
     desc: Test the Critic agent
     cmds:
-      - docker compose -f demos/a2a/compose.yml --verbose up -d --wait --build
+      #- docker compose -f demos/a2a/compose.yml --verbose up -d --wait --build
       - >
         curl -X POST http://localhost:8001
         -H "Content-Type: application/json"
@@ -45,4 +45,4 @@ tasks:
           }
         }' | jq
       - docker compose -f demos/a2a/compose.yml logs mcp-gateway
-      - docker compose -f demos/a2a/compose.yml down
+      #- docker compose -f demos/a2a/compose.yml down

@@ -31,7 +31,7 @@ Carefully read the provided answer text. Extract every distinct CLAIM made withi
 For each CLAIM you identified in Step 1, perform the following:
 
 * Consider the Context: Take into account the original question and any other CLAIMS already identified within the answer.
-* Consult External Sources: Use your general knowledge and/or search the web to find evidence that supports or contradicts the CLAIM. Aim to consult reliable and authoritative sources.
+* Consult External Sources: Use your search tool to search the web to find evidence that supports or contradicts the CLAIM. Aim to consult reliable and authoritative sources.
 * Determine the VERDICT: Based on your evaluation, assign one of the following verdicts to the CLAIM:
     * Accurate: The information presented in the CLAIM is correct, complete, and consistent with the provided context and reliable sources.
     * Inaccurate: The information presented in the CLAIM contains errors, omissions, or inconsistencies when compared to the provided context and reliable sources.

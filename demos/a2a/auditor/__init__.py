@@ -12,22 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Critic agent for identifying and verifying statements using search tools."""
+"""LLM Auditor for verifying & refining LLM-generated answers using the web."""
 
-import os
 import logging
-import warnings
+from . import agent
 
-# Set the base URL for the OpenAI API to the Docker Model Runner URL
-os.environ.setdefault("OPENAI_BASE_URL", os.getenv("DOCKER-MODEL-RUNNER_URL"))
-# Set the API key to a dummy value since it's not used
-os.environ.setdefault("OPENAI_API_KEY","not-used")
-
-# Suppress Pydantic serialization warnings from LiteLLM
-warnings.filterwarnings("ignore", category=UserWarning, module="pydantic.main")
-
+# Enable logging with reduced verbosity
+logging.basicConfig(
+    level=logging.INFO,                          # Less verbose than DEBUG
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    force=True,                                  # override ADK defaults
+)
 logging.getLogger("google.adk").setLevel(logging.INFO)
-logging.getLogger("LiteLLM").setLevel(logging.WARNING)  # Much less verbose
-logging.getLogger("litellm").setLevel(logging.WARNING)  # Also reduce this
 logging.getLogger("httpx").setLevel(logging.WARNING)    # Reduce HTTP logs
 logging.getLogger("httpcore").setLevel(logging.WARNING) # Reduce HTTP core logs

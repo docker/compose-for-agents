@@ -22,9 +22,14 @@ RUN useradd --create-home --shell /bin/bash app \
 USER app
 
 
+##### Auditor Agent
+FROM base AS auditor-agent
+
+COPY auditor/ ./auditor/
+CMD ["adk", "web", "--host", "0.0.0.0", "--log_level", "DEBUG"]
+
 ##### Critic Agent
 FROM base AS critic-agent
 
 COPY critic/ ./critic/
-EXPOSE 8001
-CMD ["python", "-m", "critic", "--host", "0.0.0.0", "--port", "8001"]
+CMD ["python", "-m", "critic", "--host", "0.0.0.0"]

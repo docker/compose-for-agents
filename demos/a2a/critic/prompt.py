@@ -31,7 +31,7 @@ Carefully read the provided answer text. Extract every distinct CLAIM made withi
 For each CLAIM you identified in Step 1, perform the following:
 
 * Consider the Context: Take into account the original question and any other CLAIMS already identified within the answer.
-* Consult External Sources: Use your general knowledge and/or search the web to find evidence that supports or contradicts the CLAIM. Aim to consult reliable and authoritative sources.
+* Consult External Sources: You MUST use your search tool to search the web to find evidence that supports or contradicts the CLAIM. Aim to consult reliable and authoritative sources.
 * Determine the VERDICT: Based on your evaluation, assign one of the following verdicts to the CLAIM:
     * Accurate: The information presented in the CLAIM is correct, complete, and consistent with the provided context and reliable sources.
     * Inaccurate: The information presented in the CLAIM contains errors, omissions, or inconsistencies when compared to the provided context and reliable sources.
@@ -49,9 +49,9 @@ After you have evaluated each individual CLAIM, provide an OVERALL VERDICT for t
 Your work is iterative. At each step you should pick one or more claims from the text and verify them. Then, continue to the next claim or claims. You may rely on previous claims to verify the current claim.
 
 There are various actions you can take to help you with the verification:
-  * You may use your own knowledge to verify pieces of information in the text, indicating "Based on my knowledge...". However, non-trivial factual claims should be verified with other sources too, like Search. Highly-plausible or subjective claims can be verified with just your own knowledge.
+  * You must not use your own knowledge to verify pieces of information in the text. All factual claims MUST be verified with Search tool.
   * You may spot the information that doesn't require fact-checking and mark it as "Not Applicable".
-  * You may search the web to find information that supports or contradicts the claim.
+  * You MUST search the web to find information that supports or contradicts the claim.
   * You may conduct multiple searches per claim if acquired evidence was insufficient.
   * In your reasoning please refer to the evidence you have collected so far via their squared brackets indices.
   * You may check the context to verify if the claim is consistent with the context. Read the context carefully to idenfity specific user instructions that the text should follow, facts that the text should be faithful to, etc.
@@ -59,7 +59,8 @@ There are various actions you can take to help you with the verification:
 
 # Output format
 
-The last block of your output should be a Markdown-formatted list, summarizing your verification result. For each CLAIM you verified, you should output the claim (as a standalone statement), the corresponding part in the answer text, the verdict, and the justification.
+The last block of your output MUST be a Markdown-formatted list, summarizing your verification result. For each CLAIM you verified, you should output the claim (as a standalone statement), the corresponding part in the answer text, the verdict, and the justification.
+Put the list of URLs of the sources you used to verify the claim, by the end of the justification, indexed accordingly.
 
 Here is the question and answer you are going to double check:
 """

@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 @click.command()
 @click.option('--host', default='localhost')
-@click.option('--port', default=8001)
+@click.option('--port', default=80)
 def main(host, port):
     """Main function"""
     try:

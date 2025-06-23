@@ -58,6 +58,8 @@ class CriticAgent:
                 state={},
                 session_id=session_id,
             )
+
+        accumulated_response = ""
         async for event in self._runner.run_async(
             user_id=self._user_id, session_id=session.id, new_message=content
         ):
@@ -74,23 +76,30 @@ class CriticAgent:
                 elif (
                     event.content
                     and event.content.parts
-                    and any(
-                        [
-                            True
-                            for p in event.content.parts
-                            if p.function_response
-                        ]
-                    )
+                    and any(p.function_response for p in event.content.parts)
                 ):
-                    response = next(
-                        p.function_response.model_dump()
-                        for p in event.content.parts
-                    )
+                    # Find the first part with function_response
+                    for p in event.content.parts:
+                        if p.function_response:
+                            response = p.function_response.model_dump()
+                            break
+
+                # Use accumulated response if available, otherwise use final response
+                final_content = accumulated_response if accumulated_response else response
                 yield {
                     'is_task_complete': True,
-                    'content': response,
+                    'content': final_content,
                 }
             else:
+                # Handle streaming content - accumulate partial responses
+                if (
+                    event.content
+                    and event.content.parts
+                ):
+                    for part in event.content.parts:
+                        if part.text:
+                            accumulated_response += part.text
+
                 yield {
                     'is_task_complete': False,
                     'updates': self.get_processing_message(),
