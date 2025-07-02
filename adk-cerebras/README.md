@@ -56,7 +56,7 @@ The system consists of three main agents orchestrated by Docker Compose, which p
 CEREBRAS_API_KEY=<your_cerebras_api_key>
 ```
 
-### ✋ All the prompts are define in the 🐙 compose file
+### ✋ All the prompts are defined in the 🐙 compose file
 
 ### Start the services
 
