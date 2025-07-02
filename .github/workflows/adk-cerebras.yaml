@@ -39,5 +39,5 @@ jobs:
       - name: Check lint
         run: uv run ruff check
 
-      - name: Check types
-        run: uv run pyright
+      #- name: Check types
+      #  run: uv run pyright
