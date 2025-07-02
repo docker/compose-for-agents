@@ -1,0 +1,16 @@
+[project]
+name = "adk-demo"
+version = "0.1.0"
+description = "ADK agent demo with Docker Compose"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "google-adk>=1.5.0",
+    "litellm>=1.73.2",
+]
+
+[dependency-groups]
+dev = [
+    "pyright>=1.1.402",
+    "ruff>=0.12.1",
+]
