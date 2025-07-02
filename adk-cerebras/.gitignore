@@ -3,4 +3,5 @@ __pycache__
 .vscode/*
 .devcontainer/*
 /agents/.env
-./env
+.env
+/backup

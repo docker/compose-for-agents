@@ -54,7 +54,10 @@ The system consists of three main agents orchestrated by Docker Compose, which p
 
 ```env
 CEREBRAS_API_KEY=<your_cerebras_api_key>
+CEREBRAS_BASE_URL=https://api.cerebras.ai/v1
+CEREBRAS_CHAT_MODEL=llama-4-scout-17b-16e-instruct
 ```
+> look at the `.env.sample` file
 
 ### ✋ All the prompts are defined in the 🐙 compose file
 
