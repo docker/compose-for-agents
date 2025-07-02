@@ -1,10 +1,9 @@
 import os
+
 from google.adk.agents import Agent
 from google.adk.models.lite_llm import LiteLlm
-from google.adk.tools import agent_tool
 
-from .sub_agents import cerebras_agent, bob_agent
-
+from .sub_agents import bob_agent, cerebras_agent
 
 root_agent = Agent(
     model=LiteLlm(
