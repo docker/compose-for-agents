@@ -3,9 +3,6 @@ import os
 from google.adk.agents import Agent
 from google.adk.models.lite_llm import LiteLlm
 
-LiteLlm.set_verbose = True
-
-
 bob_agent = Agent(
     model=LiteLlm(
         model=f"openai/{os.environ.get('BOB_CHAT_MODEL')}",
