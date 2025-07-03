@@ -33,7 +33,7 @@ else
 fi
 exec \$@
 EOF
-RUN chmod +x ./entrypoint.sh && sed -i 's/\r$//' /entrypoint.sh
+RUN chmod +x ./entrypoint.sh && sed -i 's/\r$//' ./entrypoint.sh
 
 RUN useradd --create-home --shell /bin/bash app \
     && chown -R app:app /app
