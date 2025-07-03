@@ -34,6 +34,11 @@ class LlmAgent(Agent):
             provider = self._config.model.provider
             name = self._config.model.name
 
+        if not name:
+            raise ValueError(
+                f"LLM agent {self._config.name} does not specify a model name"
+            )
+
         if not provider:
             provider = "docker"
 
@@ -41,16 +46,14 @@ class LlmAgent(Agent):
         api_key: str | None = None
         if provider == "docker":
             api_key = "does_not_matter_but_cannot_be_empty"
-            base_url = os.getenv("LLM_AGENT_API_URL")
+            base_url = os.getenv("MODEL_RUNNER_URL")
             if not base_url:
-                raise ValueError("AGENT_LLM_URL environment variable is not set")
+                raise ValueError("MODEL_RUNNER_URL environment variable is not set")
+            name = "openai/" + name
         elif provider == "openai":
             api_key = os.getenv("OPENAI_API_KEY")
+            if not api_key:
+                raise ValueError("OPENAI_API_KEY environment variable is not set")
         else:
             raise ValueError(f"unknown model provider {provider}")
-        if not name:
-            raise ValueError(
-                f"LLM agent {self._config.name} does not specify a model name"
-            )
-        print("LLMPARAMS", name, base_url)
-        return LiteLlm(model="openai/" + name, api_key=api_key, base_url=base_url)
+        return LiteLlm(model=name, api_key=api_key, base_url=base_url)

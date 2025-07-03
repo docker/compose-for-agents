@@ -34,7 +34,7 @@ services:
     depends_on:
       - database
     models:
-      agent:
+      qwen3:
         endpoint_var: MODEL_RUNNER_URL
         model_var: MODEL_RUNNER_MODEL
 
@@ -44,17 +44,17 @@ services:
     use_api_socket: true
     command:
       - --transport=sse
-      - --secrets=/run/secrets/database_url
+      - --secrets=/run/secrets/database-url
       # add any MCP servers you want to use
       - --servers=postgres
       - --tools=query
     secrets:
-      - database_url
+      - database-url
 
 models:
-  agent:
+  qwen3:
     model: ai/qwen3:14B-Q6_K
 
 secrets:
-  database_url:
+  database-url:
     file: ./postgres_url

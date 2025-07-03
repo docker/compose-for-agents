@@ -1,16 +1,16 @@
-name: ADK CI
+name: Agno CI
 
 on:
   push:
     paths:
-      - '.github/workflows/adk.yaml'
-      - 'adk/**'
+      - '.github/workflows/agno.yaml'
+      - 'agno/**'
     branches:
       - main
   pull_request:
     paths:
-      - '.github/workflows/adk.yaml'
-      - 'adk/**'
+      - '.github/workflows/agno.yaml'
+      - 'agno/**'
 
 permissions:
   contents: read
@@ -22,7 +22,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: adk
+        working-directory: agno/agent
 
     steps:
       - name: Checkout repository
@@ -47,7 +47,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: adk
+        working-directory: agno
 
     steps:
       - name: Checkout repository

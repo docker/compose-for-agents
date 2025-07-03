@@ -12,7 +12,7 @@ services:
       - critic-agent-a2a
       - reviser-agent-a2a
     models:
-       agents:
+      gemma3:
          endpoint_var: MODEL_RUNNER_URL
          model_var: MODEL_RUNNER_MODEL
 
@@ -24,7 +24,8 @@ services:
     depends_on:
       - mcp-gateway
     models:
-       agents:
+       gemma3:
+         # specify which environment variables to inject into the container
          endpoint_var: MODEL_RUNNER_URL
          model_var: MODEL_RUNNER_MODEL
 
@@ -36,7 +37,7 @@ services:
     depends_on:
       - mcp-gateway
     models:
-       agents:
+       gemma3:
          endpoint_var: MODEL_RUNNER_URL
          model_var: MODEL_RUNNER_MODEL
 
@@ -47,9 +48,13 @@ services:
     command:
       - --transport=sse
       - --servers=duckduckgo
+      # add an MCP interceptor to log the responses
+      - --interceptor
+      - after:exec:echo RESPONSE=$(cat) >&2
 
 models:
-  agents:
+  # declare LLM models to pull and use
+  gemma3:
     model: ai/gemma3:4B-Q4_0
     context_size: 10000 # 3.5 GB VRAM
     #context_size: 131000 # 7.6 GB VRAM

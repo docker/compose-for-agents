@@ -50,7 +50,9 @@ instructions: |
 
   Here is the question and answer you are going to double check:
 
-model: ${LLM_AGENT_MODEL_NAME}
+model:
+  name: ${LLM_AGENT_MODEL_NAME}
+  provider: ${LLM_AGENT_MODEL_PROVIDER}
 tools:
   - mcp/duckduckgo:search
 skills:

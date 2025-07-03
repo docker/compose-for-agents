@@ -33,7 +33,31 @@ This project demonstrates a **collaborative multi-agent system** built with [Agn
 docker compose up --build
 ```
 
+Using Docker Offload with GPU support, you can run the same demo with a larger model that takes advantage of a more powerful GPU on the remote instance:
+```sh
+docker compose -f compose.yaml -f compose.offload.yaml up --build
+```
+
 That's all! The agents will spin up automatically. Open **http://localhost:3000** in your browser to interact with the multi-agent system.
+
+# 🧠 Inference Options
+
+By default, this project uses [Docker Model Runner] to handle LLM inference locally — no internet connection or external API key is required.
+
+If you’d prefer to use OpenAI instead:
+
+1. Create a `secret.openai-api-key` file with your OpenAI API key:
+
+```
+sk-...
+```
+
+2. Restart the project with the OpenAI configuration:
+
+```
+docker compose down -v
+docker compose -f compose.yaml -f compose.openai.yaml up
+```
 
 # ❓ What Can It Do?
 
@@ -129,3 +153,4 @@ docker compose down -v
 [GitHub MCP Server]: https://github.com/modelcontextprotocol/servers
 [Docker Compose]: https://github.com/docker/compose
 [Docker Desktop]: https://www.docker.com/products/docker-desktop/
+[Docker Model Runner]: https://docs.docker.com/ai/model-runner/

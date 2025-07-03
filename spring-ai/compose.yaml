@@ -11,7 +11,10 @@ services:
       - QUESTION="Does Spring AI supports the Model Context Protocol? Please provide some references."
     depends_on:
       - mcp-gateway
-      - model_runner
+    models:
+      gemma:
+        endpoint_var: MODEL_RUNNER_URL
+        model_var: MODEL_RUNNER_MODEL 
   mcp-gateway:
     # mcp-gateway secures your MCP servers
     image: docker/mcp-gateway:latest
@@ -24,8 +27,6 @@ services:
       - --servers=duckduckgo
       - --tools=search,fetch_content
 
-  model_runner:
-    provider:
-      type: model
-      options:
-        model: ai/gemma3-qat
+models:
+  gemma:
+    model: ai/gemma3-qat

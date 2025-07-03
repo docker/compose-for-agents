@@ -27,6 +27,25 @@ docker compose up
 
 No setup, API keys, or additional configuration required.
 
+# 🧠 Inference Options
+
+By default, this project uses [Docker Model Runner] to handle LLM inference locally — no internet connection or external API key is required.
+
+If you’d prefer to use OpenAI instead:
+
+1. Create a `secret.openai-api-key` file with your OpenAI API key:
+
+```
+sk-...
+```
+
+2. Restart the project with the OpenAI configuration:
+
+```
+docker compose down -v
+docker compose -f compose.yaml -f compose.openai.yaml up
+```
+
 # ❓ What Can It Do?
 
 Ask natural language questions and let Spring AI + Brave Search provide intelligent, real-time answers:
@@ -83,3 +102,4 @@ flowchart TD
 [Spring AI]: https://github.com/spring-projects/spring-ai
 [Docker Compose]: https://docs.docker.com/compose/
 [Docker Desktop]: https://www.docker.com/products/docker-desktop/
+[Docker Model Runner]: https://docs.docker.com/ai/model-runner/

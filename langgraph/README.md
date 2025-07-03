@@ -28,6 +28,24 @@ docker compose up
 
 That’s all. The agent spins up automatically, sets up PostgreSQL, loads a pre-seeded database (`Chinook.db`), and starts answering your questions.
 
+# 🧠 Inference Options
+
+By default, this project uses [Docker Model Runner] to handle LLM inference locally — no internet connection or external API key is required.
+
+If you’d prefer to use OpenAI instead:
+
+1. Create a `secret.openai-api-key` file with your OpenAI API key:
+
+```
+sk-...
+```
+
+2. Restart the project with the OpenAI configuration:
+
+```
+docker compose down -v
+docker compose -f compose.yaml -f compose.openai.yaml up
+```
 
 # ❓ What Can It Do?
 
@@ -99,3 +117,4 @@ docker compose down -v
 [PostgreSQL]: https://postgresql.org
 [Docker Compose]: https://github.com/docker/compose
 [Docker Desktop]: https://www.docker.com/products/docker-desktop/
+[Docker Model Runner]: https://docs.docker.com/ai/model-runner/

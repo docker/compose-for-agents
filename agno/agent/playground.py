@@ -1,69 +1,47 @@
 import asyncio
 import os
-import socket
 import sys
-from typing import Optional
-from urllib.parse import urlparse
 
-import nest_asyncio
-import yaml
-
-from agno import agent, team
+from agno.agent import Agent
 from agno.models.openai import OpenAIChat
 from agno.playground import Playground, serve_playground_app
-from agno.tools.mcp import MCPTools, Toolkit
-from agno.tools.reasoning import ReasoningTools
+from agno.team import Team
+from agno.tools import Toolkit
+from agno.tools.mcp import MCPTools
 from fastapi.middleware.cors import CORSMiddleware
+import nest_asyncio
+import yaml
 
 # Allow nested event loops
 nest_asyncio.apply()
 
-DOCKER_MODEL_PROVIDER = "docker"
 
-class Agent(agent.Agent):
-    @property
-    def is_streamable(self) -> bool:
-        if self.stream is not None:
-            return self.stream
-        return super().is_streamable
-
-
-class Team(team.Team):
-    @property
-    def is_streamable(self) -> bool:
-        stream = getattr(self, "stream")
-        if stream is not None:
-            return stream
-        return super().is_streamable
-
-
-def should_stream(model_provider: str, tools: list[Toolkit]) -> Optional[bool]:
-    """Returns whether a model with the given provider and tools can stream"""
-    if model_provider == DOCKER_MODEL_PROVIDER and len(tools) > 0:
-        # DMR doesn't yet support tools with streaming
-        return True
-    # Let the model/options decide
-    return None
-
-
-def create_model_from_config(entity_data: dict, entity_id: str) -> tuple[OpenAIChat, str]:
+def create_model_from_config(entity_data: dict, entity_id: str) -> OpenAIChat:
     """Create a model instance from entity configuration data."""
-    model_name = entity_data.get("model")
-    if not model_name:
-        model_name = os.getenv("MODEL_RUNNER_MODEL")
-    temperature = entity_data.get("temperature", None)
-    provider = entity_data.get("model_provider", "docker")
-    model = create_model(model_name, provider, temperature)
-    return model, provider
+    model = entity_data.get("model", {})
+    name = model.get("name")
+    if not name:
+        raise ValueError(
+            f"Model name not specified for {entity_id}. Please set 'model.name' in the configuration."
+        )
+    provider = model.get("provider", "")
+    temperature = entity_data.get("temperature")
+    return create_model(name, provider, temperature)
 
 
-def create_model(model_name: str, provider: str, temperature: float) -> OpenAIChat:
+def create_model(
+    model_name: str, provider: str, temperature: float | None
+) -> OpenAIChat:
     """Create a model instance based on the model name and provider."""
-    print(f"creating model {model_name} with provider {provider} and temperature {temperature}")
-    if provider == DOCKER_MODEL_PROVIDER:
+    print(
+        f"creating model {model_name} with provider {provider} and temperature {temperature}"
+    )
+    if provider == "docker":
         base_url = os.getenv("MODEL_RUNNER_URL")
         if base_url is None:
-            base_url = "http://model-runner.docker.internal/engines/llama.cpp/v1"
+            raise ValueError(
+                f"MODEL_RUNNER_URL environment variable not set for {model_name}."
+            )
         model = OpenAIChat(id=model_name, base_url=base_url, temperature=temperature)
         model.role_map = {
             "system": "system",
@@ -91,36 +69,16 @@ async def create_mcp_tools(tools_list: list[str], entity_type: str) -> list[Tool
 
     tool_names = [name.split(":", 1)[1] for name in tools_list]
 
-    # Always use socat, but the endpoint can be different (mock vs real gateway)
-    endpoint = os.environ['MCPGATEWAY_ENDPOINT']
-    print(f"DEBUG: {entity_type} connecting to MCP gateway at {endpoint}")
-
-    # Parse endpoint to extract host and port
-    try:
-        # Handle both URL format (http://host:port/path) and host:port format
-        if endpoint.startswith('http://') or endpoint.startswith('https://'):
-            parsed = urlparse(endpoint)
-            host = parsed.hostname
-            port = parsed.port
-            tcp_endpoint = f"{host}:{port}"
-        else:
-            # Legacy host:port format
-            host, port = endpoint.split(':')
-            port = int(port)
-            tcp_endpoint = endpoint
-
-        # Test TCP connection first
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.settimeout(5)
-        sock.connect((host, port))
-        sock.close()
-        print(f"DEBUG: TCP connection to {host}:{port} successful")
-    except Exception as e:
-        print(f"ERROR: TCP connection to {endpoint} failed: {e}")
-        raise
+    url = os.environ.get("MCPGATEWAY_URL")
+    if not url:
+        raise ValueError(
+            f"MCPGATEWAY_URL environment variable not set for {entity_type} tools"
+        )
+    print(f"DEBUG: {entity_type} connecting to MCP gateway at {url}")
 
     t = MCPTools(
-        command=f"socat STDIO TCP:{tcp_endpoint}",
+        url=url,
+        transport="sse",
         include_tools=tool_names,
     )
     mcp_tools = await t.__aenter__()
@@ -130,9 +88,9 @@ async def create_mcp_tools(tools_list: list[str], entity_type: str) -> list[Tool
 def get_common_config(entity_data: dict) -> dict:
     """Extract common configuration options."""
     return {
-        'markdown': entity_data.get("markdown", False),
-        'add_datetime_to_instructions': True,
-        'debug_mode': True,
+        "markdown": entity_data.get("markdown", False),
+        "add_datetime_to_instructions": True,
+        "debug_mode": True,
     }
 
 
@@ -145,11 +103,11 @@ async def run_server(config) -> None:
     teams_by_id = {}
 
     for agent_id, agent_data in config.get("agents", {}).items():
-        model, provider = create_model_from_config(agent_data, agent_id)
+        model = create_model_from_config(agent_data, agent_id)
         common_config = get_common_config(agent_data)
 
         tools: list[Toolkit] = [
-#            ReasoningTools(think=True, analyze=True)
+            #            ReasoningTools(think=True, analyze=True)
         ]
         tools_list = agent_data.get("tools", [])
         mcp_tools = await create_mcp_tools(tools_list, "Agent")
@@ -160,10 +118,9 @@ async def run_server(config) -> None:
             role=agent_data.get("role", ""),
             description=agent_data.get("description"),
             instructions=agent_data.get("instructions"),
-            tools=tools,
+            tools=tools,  # type: ignore
             model=model,
             show_tool_calls=True,
-            stream=should_stream(provider, tools),
             **common_config,
         )
         agents_by_id[agent_id] = agent
@@ -172,7 +129,7 @@ async def run_server(config) -> None:
             agents.append(agent)
 
     for team_id, team_data in config.get("teams", {}).items():
-        model, provider = create_model_from_config(team_data, team_id)
+        model = create_model_from_config(team_data, team_id)
         common_config = get_common_config(team_data)
 
         team_agents: list[Agent | Team] = []
@@ -184,7 +141,7 @@ async def run_server(config) -> None:
             team_agents.append(agent)
 
         team_tools: list[Toolkit] = [
-#            ReasoningTools(think=True, analyze=True)
+            #  ReasoningTools(think=True, analyze=True)
         ]
         tools_list = team_data.get("tools", [])
         mcp_tools = await create_mcp_tools(tools_list, "Team")
@@ -193,21 +150,20 @@ async def run_server(config) -> None:
         team = Team(
             name=team_data.get("name", ""),
             mode=team_data.get("mode", "coordinate"),
-            members=team_agents, # type: ignore
+            members=team_agents,
             description=team_data.get("description"),
             instructions=team_data.get("instructions"),
-            tools=team_tools,  # type: ignore,
+            tools=team_tools,  # type: ignore
             model=model,
             # show_members_responses=True,
             # show_tool_calls=True,
             **common_config,
         )
-        team.stream = should_stream(provider, team_tools)
         teams_by_id[team_id] = team
         if team_data.get("chat", True):
             teams.append(team)
 
-    playground = Playground(agents=agents, teams=teams) # type: ignore
+    playground = Playground(agents=agents, teams=teams)
 
     app = playground.get_app()
     app.add_middleware(
@@ -225,7 +181,8 @@ async def run_server(config) -> None:
 def main():
     config_filename = sys.argv[1] if len(sys.argv) > 1 else "/agents.yaml"
     with open(config_filename, "r") as f:
-        config = yaml.safe_load(f)
+        expanded = os.path.expandvars(f.read())
+        config = yaml.safe_load(expanded)
 
     asyncio.run(run_server(config))
 

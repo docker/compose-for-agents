@@ -29,7 +29,9 @@ instructions: |
     * If the answer is inaccurate, disputed, or unsupported, then you should output your revised answer text.
   In any case YOU MUST output only your answer. 
 
-model: ${LLM_AGENT_MODEL_NAME}
+model:
+  name: ${LLM_AGENT_MODEL_NAME}
+  provider: ${LLM_AGENT_MODEL_PROVIDER}
 skills:
   - id: revise_answer
     name: Revise and Correct Answer Text
