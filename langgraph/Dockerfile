@@ -38,5 +38,5 @@ else
 fi
 exec python agent.py
 EOF
-RUN chmod +x /entrypoint.sh
+RUN chmod +x /entrypoint.sh && sed -i 's/\r$//' /entrypoint.sh
 ENTRYPOINT [ "/entrypoint.sh" ]

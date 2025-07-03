@@ -44,5 +44,5 @@ export OPENAI_BASE_URL=\${OPENAI_BASE_URL%/}
 export OPENAI_BASE_URL=\${OPENAI_BASE_URL%/v1}
 exec java -jar app.jar
 EOF
-RUN chmod +x entrypoint.sh
+RUN chmod +x entrypoint.sh && sed -i 's/\r$//' /entrypoint.sh
 ENTRYPOINT ["./entrypoint.sh"]

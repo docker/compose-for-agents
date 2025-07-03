@@ -25,5 +25,5 @@ else
 fi
 exec poetry run marketing_posts
 EOF
-RUN chmod +x /entrypoint.sh
+RUN chmod +x /entrypoint.sh && sed -i 's/\r$//' /entrypoint.sh
 CMD ["/entrypoint.sh"]
