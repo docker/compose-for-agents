@@ -32,7 +32,7 @@ else
 fi
 exec adk web --host 0.0.0.0 --port 8080 --log_level DEBUG
 EOF
-RUN chmod +x /entrypoint.sh
+RUN chmod +x /entrypoint.sh && sed -i 's/\r$//' /entrypoint.sh
 
 # Create non-root user
 RUN useradd --create-home --shell /bin/bash app \
