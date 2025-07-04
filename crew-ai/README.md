@@ -60,7 +60,7 @@ Give it a company and a project description — the agents will collaborate to p
 
 From strategy to storytelling, the team handles it all — autonomously.
 
-You can **customize the tasks** to use your own domain and project description — just edit the inputs in `src/config/inputs.yaml`.
+You can **customize the tasks** to use your own domain and project description — just edit the inputs in `src/marketing_posts/config/inputs.yaml`.
 
 
 # 👥 Virtual Team Structure
