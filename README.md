@@ -41,3 +41,14 @@ docker compose -f compose.yaml -f compose.openai.yaml up
 | [Embabel](https://github.com/embabel/embabel-agent) Travel Agent | qwen3, Claude3.7, llama3.2, jimclark106/all-minilm:23M-F16 | brave, github-official, wikipedia-mcp, weather, google-maps, airbnb | [./embabel](./embabel) | [compose.yaml](https://github.com/embabel/travel-planner-agent/blob/main/compose.yaml) and [compose.dmr.yaml](https://github.com/embabel/travel-planner-agent/blob/main/compose.dmr.yaml) |
 | [Spring AI](https://spring.io/projects/spring-ai) Brave Search | none | brave | [./spring-ai](./spring-ai) | [compose.yaml](./spring-ai/compose.yaml) |
 
+## License
+
+This repository is **dual-licensed** under the Apache License 2.0 or the MIT
+License. You may choose either license to govern your use of the contributions
+made by Docker in this repository.
+
+> ℹ️ **Note:** Each example under may have its own `LICENSE` file.
+> These are provided to reflect any third-party licensing requirements that
+> apply to that specific example, and they must be respected accordingly.
+
+`SPDX-License-Identifier: Apache-2.0 OR MIT`

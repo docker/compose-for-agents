@@ -156,6 +156,7 @@ docker compose down -v
 
 # 📎 Credits
 - [crewAI]
+- [crewAI Marketing Strategy Example](https://github.com/crewAIInc/crewAI-examples/tree/main/marketing_strategy)
 - [DuckDuckGo]
 - [Docker Compose]
 
