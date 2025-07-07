@@ -2,7 +2,6 @@
 
 A multi-agent system for Go programming assistance built with Google Agent Development Kit (ADK). This project features a coordinating agent (DevDuck) that manages two specialized sub-agents (Bob and Cerebras) for different programming tasks.
 
-
 ## Architecture
 
 The system consists of three main agents orchestrated by Docker Compose, which plays a **primordial role** in launching and coordinating all agent services:
@@ -44,8 +43,10 @@ The system consists of three main agents orchestrated by Docker Compose, which p
 
 ### Prerequisites
 
-- Docker and Docker Compose
-- Cerebras API key (for Cerebras agent)
++ **[Docker Desktop](https://www.docker.com/products/docker-desktop/) 4.43.0+ or [Docker Engine](https://docs.docker.com/engine/)** installed
++ **A laptop or workstation with a GPU** (e.g., a MacBook) for running open models locally. If you don't have a GPU, you can alternatively use [**Docker Offload**](https://www.docker.com/products/docker-offload).
++ If you're using Docker Engine on Linux or Docker Desktop on Windows, ensure that the [Docker Model Runner requirements](https://docs.docker.com/ai/model-runner/) are met (specifically that GPU support is enabled) and the necessary drivers are installed
++ If you're using Docker Engine on Linux, ensure you have Compose 2.38.1 or later installed
 
 ### Configuration
 

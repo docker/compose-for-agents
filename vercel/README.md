@@ -10,7 +10,10 @@ The application also starts with a connection to the Docker MCP Gateway, which h
 
 ### Requirements
 
-* 🐳 [Docker Desktop] **v4.43.0+**
++ **[Docker Desktop](https://www.docker.com/products/docker-desktop/) 4.43.0+ or [Docker Engine](https://docs.docker.com/engine/)** installed
++ **A laptop or workstation with a GPU** (e.g., a MacBook) for running open models locally. If you don't have a GPU, you can alternatively use [**Docker Offload**](https://www.docker.com/products/docker-offload).
++ If you're using Docker Engine on Linux or Docker Desktop on Windows, ensure that the [Docker Model Runner requirements](https://docs.docker.com/ai/model-runner/) are met (specifically that GPU support is enabled) and the necessary drivers are installed
++ If you're using Docker Engine on Linux, ensure you have Compose 2.38.1 or later installed
 
 ### Configure MCP secrets
 
