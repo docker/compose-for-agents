@@ -8,34 +8,38 @@ services:
     environment:
       - CRITIC_AGENT_URL=http://critic-agent-a2a:8001
       - REVISER_AGENT_URL=http://reviser-agent-a2a:8001
-      - OPENAI_MODEL_NAME=o3
-    secrets:
-      - openai-api-key
     depends_on:
       - critic-agent-a2a
       - reviser-agent-a2a
+    models:
+      gemma3:
+         endpoint_var: MODEL_RUNNER_URL
+         model_var: MODEL_RUNNER_MODEL
 
   critic-agent-a2a:
     build:
       target: critic-agent
     environment:
       - MCPGATEWAY_ENDPOINT=http://mcp-gateway:8811/sse
-      - OPENAI_MODEL_NAME=o3
-    secrets:
-      - openai-api-key
     depends_on:
       - mcp-gateway
+    models:
+       gemma3:
+         # specify which environment variables to inject into the container
+         endpoint_var: MODEL_RUNNER_URL
+         model_var: MODEL_RUNNER_MODEL
 
   reviser-agent-a2a:
     build:
       target: reviser-agent
     environment:
       - MCPGATEWAY_ENDPOINT=http://mcp-gateway:8811/sse
-      - OPENAI_MODEL_NAME=o3
-    secrets:
-      - openai-api-key
     depends_on:
       - mcp-gateway
+    models:
+       gemma3:
+         endpoint_var: MODEL_RUNNER_URL
+         model_var: MODEL_RUNNER_MODEL
 
   mcp-gateway:
     # mcp-gateway secures your MCP servers
@@ -48,6 +52,9 @@ services:
       - --interceptor
       - after:exec:echo RESPONSE=$(cat) >&2
 
-secrets:
-  openai-api-key:
-    file: secret.openai-api-key
+models:
+  # declare LLM models to pull and use
+  gemma3:
+    model: ai/gemma3:4B-Q4_0
+    context_size: 10000 # 3.5 GB VRAM
+    #context_size: 131000 # 7.6 GB VRAM

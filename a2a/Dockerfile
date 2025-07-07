@@ -24,7 +24,7 @@ if test -f /run/secrets/openai-api-key; then
 fi
 
 if test -n "\${OPENAI_API_KEY}"; then
-    echo "Using OpenAI with \${MODEL_NAME}"
+    echo "Using OpenAI with \${OPENAI_MODEL_NAME}"
     export LLM_AGENT_MODEL_PROVIDER=openai
     export LLM_AGENT_MODEL_NAME=\${OPENAI_MODEL_NAME}
 else

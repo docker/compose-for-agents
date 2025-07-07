@@ -1,10 +1,11 @@
 # 🧠 A2A Multi-Agent Fact Checker
 
-This project demonstrates a **collaborative multi-agent system** built with the **Agent2Agent SDK** ([A2A]),
-where a top-level Auditor agent coordinates the workflow to verify facts. The Critic agent gathers evidence
-via live internet searches using **DuckDuckGo** through the Model Context Protocol (**MCP**), while the Reviser
-agent analyzes and refines the conclusion using internal reasoning alone. The system showcases how agents
-with distinct roles and tools can **collaborate under orchestration**.
+This project demonstrates a **collaborative multi-agent system** built with the **Agent2Agent SDK** ([A2A])
+and [OpenAI](https://platform.openai.com/api-keys), where a top-level Auditor agent coordinates the workflow
+to verify facts. The Critic agent gathers evidence via live internet searches using **DuckDuckGo** through
+the Model Context Protocol (**MCP**), while the Reviser agent analyzes and refines the conclusion using
+internal reasoning alone. The system showcases how agents with distinct roles and tools can
+**collaborate under orchestration**.
 
 > [!Tip]
 > ✨ No configuration needed — run it with a single command.
@@ -25,41 +26,41 @@ with distinct roles and tools can **collaborate under orchestration**.
 + **A laptop or workstation with a GPU** (e.g., a MacBook) for running open models locally. If you don't have a GPU, you can alternatively use [**Docker Offload**](https://www.docker.com/products/docker-offload).
 + If you're using Docker Engine on Linux or Docker Desktop on Windows, ensure that the [Docker Model Runner requirements](https://docs.docker.com/ai/model-runner/) are met (specifically that GPU support is enabled) and the necessary drivers are installed
 + If you're using Docker Engine on Linux, ensure you have Compose 2.38.1 or later installed
++ An [OpenAI API Key](https://platform.openai.com/api-keys) 🔑
 
 ### Run the project
 
-
-```sh
-docker compose up --build
-```
-
-No configuration needed — everything runs from the container. Open `http://localhost:8080` in your browser to and select `AgentKit` in the selector at the top left, then chat with
-the agents.
-
-Using Docker Offload with GPU support, you can run the same demo with a larger model that takes advantage of a more powerful GPU on the remote instance:
-
-```sh
-docker compose -f compose.yaml -f compose.offload.yaml up --build
-```
-
-# 🧠 Inference Options
-
-By default, this project uses [Docker Model Runner] to handle LLM inference locally — no internet connection or external API key is required.
-
-If you’d prefer to use OpenAI instead:
-
-1. Create a `secret.openai-api-key` file with your OpenAI API key:
+Create a `secret.openai-api-key` file with your OpenAI API key:
 
 ```
 sk-...
 ```
 
-2. Restart the project with the OpenAI configuration:
+Then run:
 
+```sh
+docker compose up --build
 ```
-docker compose down -v
-docker compose -f compose.yaml -f compose.openai.yaml up
+
+Everything runs from the container. Open `http://localhost:8080` in your browser and then chat with
+the agents.
+
+# 🧠 Inference Options
+
+By default, this project uses [OpenAI](https://platform.openai.com) to handle LLM inference. If you'd prefer
+to use a local LLM instead, run:
+
+```sh
+docker compose -f compose.dmr.yaml up
 ```
+
+Using [**Docker Offload**](https://www.docker.com/products/docker-offload) with GPU support, you can run the
+same demo with a larger model that takes advantage of a more powerful GPU on the remote instance:
+
+```sh
+docker compose -f compose.dmr.yaml -f compose.offload.yaml up --build
+```
+
 
 # ❓ What Can It Do?
 
