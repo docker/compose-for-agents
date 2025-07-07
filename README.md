@@ -31,7 +31,7 @@ docker compose -f compose.yaml -f compose.openai.yaml up
 
 # Compose for Agents Demos - Classification
 
-| Demo | Type of Agent System | Models | MCPs | project | compose |
+| Demo | Agent System | Models | MCPs | project | compose |
 | ---- | ---- | ---- | ---- | ---- | ---- |
 | [Agno](https://github.com/agno-agi/agno) agent that summarizes GitHub issues | Single Agent | qwen3(local) | github-official | [./agno](./agno) | [compose.yaml](./agno/compose.yaml) |
 | [Vercel AI-SDK](https://github.com/vercel/ai) Chat-UI for mixing MCPs and Model | Single Agent | llama3.2(local), qwen3(local) | wikipedia-mcp, brave, resend(email) | [./vercel](./vercel) | [compose.yaml](https://github.com/slimslenderslacks/scira-mcp-chat/blob/main/compose.yaml) |
