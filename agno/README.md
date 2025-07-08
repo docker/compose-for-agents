@@ -152,7 +152,7 @@ docker compose down -v
 - [GitHub MCP Server] - Model Context Protocol integration
 - [Docker Compose] - Container orchestration
 
-[Agno]: https://github.com/agno-ai/agno
+[Agno]: https://github.com/agno-agi/agno
 [GitHub MCP Server]: https://github.com/modelcontextprotocol/servers
 [Docker Compose]: https://github.com/docker/compose
 [Docker Desktop]: https://www.docker.com/products/docker-desktop/
