@@ -32,7 +32,7 @@ docker compose -f compose.yaml -f compose.openai.yaml up
 # Compose for Agents Demos - Classification
 
 | Demo | Agent System | Models | MCPs | project | compose |
-| ---- | ---- | ---- | ---- | ---- | ---- |]<<<<<<< HEAD
+| ---- | ---- | ---- | ---- | ---- | ---- |
 | [A2A](https://github.com/a2a-agents/agent2agent) Multi-Agent Fact Checker | Multi-Agent | OpenAI | duckduckgo | [./a2a](./a2a) | [compose.yaml](./a2a/compose.yaml) | 
 | [Agno](https://github.com/agno-agi/agno) agent that summarizes GitHub issues | Multi-Agent | qwen3(local) | github-official | [./agno](./agno) | [compose.yaml](./agno/compose.yaml) |
 | [Vercel AI-SDK](https://github.com/vercel/ai) Chat-UI for mixing MCPs and Model | Single Agent | llama3.2(local), qwen3(local) | wikipedia-mcp, brave, resend(email) | [./vercel](./vercel) | [compose.yaml](https://github.com/slimslenderslacks/scira-mcp-chat/blob/main/compose.yaml) |
