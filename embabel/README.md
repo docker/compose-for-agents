@@ -9,8 +9,11 @@ It demonstrates the power of the [Embabel agent framework](https://www.github.co
 ### Requirements
 
 + **[Docker Desktop](https://www.docker.com/products/docker-desktop/) 4.43.0+ or [Docker Engine](https://docs.docker.com/engine/)** installed
-+ **A laptop or workstation with a GPU** (e.g., a MacBook) for running open models locally. If you don't have a GPU, you can alternatively use [**Docker Offload**](https://www.docker.com/products/docker-offload).
-+ If you're using Docker Engine on Linux or Docker Desktop on Windows, ensure that the [Docker Model Runner requirements](https://docs.docker.com/ai/model-runner/) are met (specifically that GPU support is enabled) and the necessary drivers are installed
++ **A laptop or workstation with a GPU** (e.g., a MacBook) for running open models locally. If you don't have a GPU,
++  you can alternatively use [**Docker Offload**](https://www.docker.com/products/docker-offload).
++ If you're using Docker Engine on Linux or Docker Desktop on Windows, ensure that the
++  [Docker Model Runner requirements](https://docs.docker.com/ai/model-runner/) are met (specifically that GPU support
++  is enabled) and the necessary drivers are installed
 + If you're using Docker Engine on Linux, ensure you have Compose 2.38.1 or later installed
 
 ### Clone the project repository
@@ -57,9 +60,9 @@ docker compose down
 
 # Credits
 
-- [Embabel Agent Framework]
-- [Docker MCP Toolkit]
-- [Docker MCP Catalog]
++ [Embabel Agent Framework]
++ [Docker MCP Toolkit]
++ [Docker MCP Catalog]
 
 [Embabel Agent Framework]: https://github.com/embabel/embabel-agent
 [Docker MCP Toolkit]: https://docs.docker.com/ai/mcp-catalog-and-toolkit/toolkit/
