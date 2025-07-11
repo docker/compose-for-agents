@@ -8,7 +8,7 @@ It demonstrates the power of the [Embabel agent framework](https://www.github.co
 
 ### Requirements
 
-+ **[Docker Desktop](https://www.docker.com/products/docker-desktop/) 4.43.0+ or 
++ **[Docker Desktop](https://www.docker.com/products/docker-desktop/) 4.43.0+ or
   [Docker Engine](https://docs.docker.com/engine/)** installed
 + **A laptop or workstation with a GPU** (e.g., a MacBook) for running open models locally. If you don't have a GPU,
   you can alternatively use [**Docker Offload**](https://www.docker.com/products/docker-offload).
