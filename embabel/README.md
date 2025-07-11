@@ -52,7 +52,7 @@ Use the [Travel Planner](http://localhost:8080) interface to plan a trip.
 
 ```sh
 # only required temporarily to support Cloud secrets
-docker mcp secret export brave > .mcp.env
+docker mcp secret export brave google-maps github > .mcp.env
 
 # compose.cloud.yaml still has one small diff from the local one.
 docker compose --profile in-docker up
