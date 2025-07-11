@@ -29,6 +29,7 @@ cd travel-agent-planner
 docker mcp secret set 'brave.api_key=<insert your Brave Search API key here>'
 docker mcp secret set 'google-maps.api_key=<insert your Google Maps API key here>'
 docker mcp secret set 'github.personal_access_token=<insert your GitHub  PAT>'
+docker mcp secret export brave google-maps github > .mcp.env
 ```
 
 ### Run the project locally
@@ -47,16 +48,6 @@ Access the Travel Planner at [http://localhost:8080](http://localhost:8080).
 # What can it do?
 
 Use the [Travel Planner](http://localhost:8080) interface to plan a trip.
-
-### Offload the project to the cloud
-
-```sh
-# only required temporarily to support Cloud secrets
-docker mcp secret export brave google-maps github > .mcp.env
-
-# compose.cloud.yaml still has one small diff from the local one.
-docker compose --profile in-docker up
-```
 
 # Cleanup
 
