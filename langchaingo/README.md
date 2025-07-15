@@ -8,7 +8,7 @@ real-time web search via [DuckDuckGo] — all orchestrated with [Docker Compose]
 > ✨ No configuration needed — run it with a single command.
 
 <p align="center">
-  <img src="demo.gif"
+  <img src="demo.mov"
        alt="Langchaingo DuckDuckGo Search Demo"
        style="border: 1px solid #ccc; border-radius: 8px;" />
 </p>
