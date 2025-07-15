@@ -1,0 +1,30 @@
+services:
+  app:
+    build:
+      target: app
+    ports:
+      - 8080:8080
+    environment:
+      - MCP_GATEWAY_URL=http://mcp-gateway:8811
+      - QUESTION="Does Golang support the Model Context Protocol? Please provide some references."
+    depends_on:
+      - mcp-gateway
+    models:
+      gemma:
+        endpoint_var: MODEL_RUNNER_URL
+        model_var: MODEL_RUNNER_MODEL 
+  mcp-gateway:
+    # mcp-gateway secures your MCP servers
+    image: docker/mcp-gateway:latest
+    use_api_socket: true
+    ports:
+      - 8811:8811
+    command:
+      - --transport=sse
+      # add any MCP servers you want to use
+      - --servers=duckduckgo
+      - --tools=search,fetch_content
+
+models:
+  gemma:
+    model: ai/gemma3-qat
