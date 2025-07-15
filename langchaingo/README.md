@@ -10,7 +10,6 @@ real-time web search via [DuckDuckGo] — all orchestrated with [Docker Compose]
 <p align="center">
   <img src="demo.gif"
        alt="Langchaingo DuckDuckGo Search Demo"
-       width="500"
        style="border: 1px solid #ccc; border-radius: 8px;" />
 </p>
 
