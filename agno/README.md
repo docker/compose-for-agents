@@ -34,7 +34,7 @@ a **Writer** agent that summarizes and categorizes them into a comprehensive mar
    - Add your GitHub token to the `.mcp.env` file:
   
    ```sh
-   GITHUB_PERSONAL_ACCESS_TOKEN=your_token_here
+   github.personal_access_token=ghp_XXXXX
    ```
 
 ### Run the Project
