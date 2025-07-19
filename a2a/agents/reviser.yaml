@@ -27,7 +27,7 @@ instructions: |
 
     * If the answer is accurate, you should output exactly the same answer text as you are given.
     * If the answer is inaccurate, disputed, or unsupported, then you should output your revised answer text.
-  In any case YOU MUST output only your answer. 
+  In any case YOU MUST output only your answer.
 
 model:
   name: ${LLM_AGENT_MODEL_NAME}

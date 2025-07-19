@@ -12,7 +12,7 @@ services:
     models:
       gemma:
         endpoint_var: MODEL_RUNNER_URL
-        model_var: MODEL_RUNNER_MODEL 
+        model_var: MODEL_RUNNER_MODEL
   mcp-gateway:
     # mcp-gateway secures your MCP servers
     image: docker/mcp-gateway:latest

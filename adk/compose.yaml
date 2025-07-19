@@ -4,14 +4,14 @@ services:
       context: .
     ports:
       # expose port for web interface
-      - "8080:8080"
+      - 8080:8080
     environment:
       # point adk at the MCP gateway
       - MCPGATEWAY_ENDPOINT=http://mcp-gateway:8811/sse
     depends_on:
       - mcp-gateway
     models:
-      gemma3 :
+      gemma3:
         endpoint_var: MODEL_RUNNER_URL
         model_var: MODEL_RUNNER_MODEL
 
@@ -28,6 +28,6 @@ models:
   gemma3:
     # pre-pull the model when starting Docker Model Runner
     model: ai/gemma3:4B-Q4_0
-    context_size: 10000 # 3.5 GB VRAM
+    context_size: 10000  # 3.5 GB VRAM
     # increase context size to handle search results
-    # context_size: 131000 # 7.6 GB VRAM
+    # context_size: 131000  # 7.6 GB VRAM

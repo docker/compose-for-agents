@@ -1,7 +1,7 @@
-name: "Setup Docker Compose"
-description: "Installs latest Docker Compose"
+name: Setup Docker Compose
+description: Installs latest Docker Compose
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Set up Docker Compose
       uses: docker/setup-compose-action@v1

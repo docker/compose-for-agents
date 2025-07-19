@@ -1,7 +1,7 @@
 models:
   gemma3:
     # pre-pull the model on Docker Model Runner
-    model: ai/gemma3-qat:27B-Q4_K_M	
-    context_size: 10000 # 18.6 GB VRAM
-    # context_size: 80000 # 28.37 GB VRAM
-    # context_size: 131000 # 35.5 GB VRAM
+    model: ai/gemma3-qat:27B-Q4_K_M
+    context_size: 10000  # 18.6 GB VRAM
+    # context_size: 80000  # 28.37 GB VRAM
+    # context_size: 131000  # 35.5 GB VRAM

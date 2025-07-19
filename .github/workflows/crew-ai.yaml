@@ -3,14 +3,14 @@ name: Crew AI CI
 on:
   push:
     paths:
-      - '.github/workflows/crew-ai.yaml'
-      - 'crew-ai/**'
+      - .github/workflows/crew-ai.yaml
+      - crew-ai/**
     branches:
       - main
   pull_request:
     paths:
-      - '.github/workflows/crew-ai.yaml'
-      - 'crew-ai/**'
+      - .github/workflows/crew-ai.yaml
+      - crew-ai/**
 
 permissions:
   contents: read
@@ -36,7 +36,7 @@ jobs:
 
       - name: Check format
         run: poetry run ruff format --check
-    
+
       - name: Check lint
         run: poetry run ruff check
 

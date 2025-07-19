@@ -1,21 +1,42 @@
-version: '3'
-
-vars:
-  MARKDOWN_CLI2_CMD: docker run --rm -v $(pwd):/workdir davidanson/markdownlint-cli2:v0.18.1
+version: "3"
 
 tasks:
+  build:markdownlint:
+    desc: Build the markdownlint Docker image
+    cmds:
+      - docker build -f Dockerfile.tools -t markdownlint --target markdownlint .
+    dir: .
+  build:yamllint:
+    desc: Build the yamllint Docker image
+    cmds:
+      - docker build -f Dockerfile.tools -t yamllint --target yamllint .
+    dir: .
+
   lint:markdown:
     desc: Lint Markdown files
+    deps:
+      - build:markdownlint
     cmds:
-      - "{{ .MARKDOWN_CLI2_CMD }}"
+      - docker run --rm -v $(pwd):/workdir markdownlint
     dir: .
   lint:markdown:fix:
     desc: Lint and Fix Markdown files
+    deps:
+      - build:markdownlint
     cmds:
-      - "{{ .MARKDOWN_CLI2_CMD }} --fix"
+      - docker run --rm -v $(pwd):/workdir markdownlint --fix
+    dir: .
+
+  lint:yaml:
+    desc: Lint YAML files
+    deps:
+      - build:yamllint
+    cmds:
+      - docker run --rm -v $(pwd):/workdir -w /workdir yamllint .
     dir: .
 
   lint:
     deps:
       - lint:markdown
+      - lint:yaml
     desc: Lint all files
