@@ -1,6 +1,6 @@
-# 🧠 Spring AI + DuckDuckGo with Model Context Protocol (MCP)
+# 🧠 Langchaingo + DuckDuckGo with Model Context Protocol (MCP)
 
-This project demonstrates a **zero-config Spring Boot application** using [Spring AI] and
+This project demonstrates a **zero-config application** using [Langchaingo] and
 the **Model Context Protocol (MCP)** to answer natural language questions by performing
 real-time web search via [DuckDuckGo] — all orchestrated with [Docker Compose].
 
@@ -9,8 +9,7 @@ real-time web search via [DuckDuckGo] — all orchestrated with [Docker Compose]
 
 <p align="center">
   <img src="demo.gif"
-       alt="Spring AI DuckDuckGo Search Demo"
-       width="500"
+       alt="Langchaingo DuckDuckGo Search Demo"
        style="border: 1px solid #ccc; border-radius: 8px;" />
 </p>
 
@@ -56,17 +55,17 @@ If you’d prefer to use OpenAI instead:
 
 # ❓ What Can It Do?
 
-Ask natural language questions and let Spring AI + DuckDuckGo Search provide intelligent, real-time answers:
+Ask natural language questions and let Langchaingo + DuckDuckGo Search provide intelligent, real-time answers:
 
-+ “Does Spring AI support the Model Context Protocol?”
++ “Does Langchaingo support the Model Context Protocol?”
 + “What is the Brave Search API?”
-+ “Give me examples of Spring Boot AI integrations.”
++ “Give me examples of Langchaingo integrations.”
 
 The application uses:
 
 + A MCP-compatible gateway to route queries to DuckDuckGo Search
-+ Spring AI’s LLM client to embed results into answers
-+ Auto-configuration via Spring Boot to bind everything
++ Langchaingo’s LLM client to embed results into answers
++ An MCP client to call tools, using the [Model Context Protocol's Go SDK].
 
 To **customize the question** asked to the agent, edit the `QUESTION` environment variable in `compose.yaml`.
 
@@ -74,20 +73,20 @@ To **customize the question** asked to the agent, edit the `QUESTION` environmen
 
 | **File/Folder**          | **Purpose**                                      |
 | ------------------------ | ------------------------------------------------ |
-| `compose.yaml`           | launches the DuckDuckGo MCP gateway and Spring AI app |
-| `Dockerfile`             | Builds the Spring Boot container                 |
-| `application.properties` | Sets the MCP gateway URL used by Spring AI       |
-| `Application.java`       | Configures the ChatClient with MCP and runs it   |
-| `mvnw`, `pom.xml`        | Maven wrapper and build definition               |
+| `compose.yaml`           | launches the DuckDuckGo MCP gateway and app |
+| `Dockerfile`             | Builds the Go container                 |
+| `main.go`                | Configures the ChatClient with MCP and runs it |
+| `tool_duckduck.go`       | Implements the DuckDuckGo tool |
 
 # 🔧 Architecture Overview
 
 ```mermaid
 
 flowchart TD
-    A[($QUESTION)] --> B[Spring Boot App]
-    B --> C[Spring AI ChatClient]
-    C -->|uses| D[MCP Tool Callback]
+    A[($QUESTION)] --> B[Go App]
+    B --> C[Langchaingo ChatClient]
+    C -->|uses| M[MCP Client]
+    M -->|uses| D[MCP Tool Callback]
     D -->|queries| E[Docker MCP Gateway]
     E -->|calls| F[DuckDuckGo Search API]
     F --> E --> D --> C
@@ -103,12 +102,13 @@ flowchart TD
 
 # 📎 Credits
 
-+ [Spring AI]
++ [Langchaingo]
 + [DuckDuckGo]
 + [Docker Compose]
 
 [DuckDuckGo]: https://duckduckgo.com
-[Spring AI]: https://github.com/spring-projects/spring-ai
+[Langchaingo]: https://github.com/tmc/langchaingo
+[Model Context Protocol's Go SDK]: https://github.com/modelcontextprotocol/go-sdk/
 [Docker Compose]: https://github.com/docker/compose
 [Docker Desktop]: https://www.docker.com/products/docker-desktop/
 [Docker Engine]: https://docs.docker.com/engine/

@@ -1,0 +1,21 @@
+version: '3'
+
+vars:
+  MARKDOWN_CLI2_CMD: docker run --rm -v $(pwd):/workdir davidanson/markdownlint-cli2:v0.18.1
+
+tasks:
+  lint:markdown:
+    desc: Lint Markdown files
+    cmds:
+      - "{{ .MARKDOWN_CLI2_CMD }}"
+    dir: .
+  lint:markdown:fix:
+    desc: Lint and Fix Markdown files
+    cmds:
+      - "{{ .MARKDOWN_CLI2_CMD }} --fix"
+    dir: .
+
+  lint:
+    deps:
+      - lint:markdown
+    desc: Lint all files

@@ -9,7 +9,6 @@ with distinct roles and tools can **collaborate under orchestration**.
 > [!Tip]
 > ✨ No configuration needed — run it with a single command.
 
-
 <p align="center">
   <img src="demo.gif"
        alt="ADK Multi-Agent Fact Check Demo"
@@ -21,57 +20,61 @@ with distinct roles and tools can **collaborate under orchestration**.
 
 ### Requirements
 
-+ **[Docker Desktop](https://www.docker.com/products/docker-desktop/) 4.43.0+ or [Docker Engine](https://docs.docker.com/engine/)** installed
-+ **A laptop or workstation with a GPU** (e.g., a MacBook) for running open models locally. If you don't have a GPU, you can alternatively use [**Docker Offload**](https://www.docker.com/products/docker-offload).
-+ If you're using Docker Engine on Linux or Docker Desktop on Windows, ensure that the [Docker Model Runner requirements](https://docs.docker.com/ai/model-runner/) are met (specifically that GPU support is enabled) and the necessary drivers are installed
-+ If you're using Docker Engine on Linux, ensure you have Compose 2.38.1 or later installed
++ **[Docker Desktop] 4.43.0+ or [Docker Engine]** installed.
++ **A laptop or workstation with a GPU** (e.g., a MacBook) for running open models locally. If you
+  don't have a GPU, you can alternatively use **[Docker Offload]**.
++ If you're using [Docker Engine] on Linux or [Docker Desktop] on Windows, ensure that the
+  [Docker Model Runner requirements] are met (specifically that GPU
+  support is enabled) and the necessary drivers are installed.
++ If you're using Docker Engine on Linux, ensure you have [Docker Compose] 2.38.1 or later installed.
 
 ### Run the project
-
 
 ```sh
 docker compose up --build
 ```
 
-Using Docker Offload with GPU support, you can run the same demo with a larger model that takes advantage of a more powerful GPU on the remote instance:
+Using Docker Offload with GPU support, you can run the same demo with a larger model that takes
+advantage of a more powerful GPU on the remote instance:
+
 ```sh
 docker compose -f compose.yaml -f compose.offload.yaml up --build
 ```
 
-
-No configuration needed — everything runs from the container. Open `http://localhost:8080` in your browser to
-chat with the agents.
+No configuration needed — everything runs from the container. Open `http://localhost:8080` in your
+browser to chat with the agents.
 
 # 🧠 Inference Options
 
-By default, this project uses [Docker Model Runner] to handle LLM inference locally — no internet connection or external API key is required.
+By default, this project uses [Docker Model Runner] to handle LLM inference locally — no internet
+connection or external API key is required.
 
 If you’d prefer to use OpenAI instead:
 
 1. Create a `secret.openai-api-key` file with your OpenAI API key:
 
-```
-sk-...
-```
+    ```plaintext
+    sk-...
+    ```
 
 2. Restart the project with the OpenAI configuration:
 
-```
-docker compose down -v
-docker compose -f compose.yaml -f compose.openai.yaml up
-```
+    ```sh
+    docker compose down -v
+    docker compose -f compose.yaml -f compose.openai.yaml up
+    ```
 
 # ❓ What Can It Do?
 
 This system performs multi-agent fact verification, coordinated by an **Auditor**:
 
-- 🧑‍⚖️ **Auditor**:
-  - Orchestrates the process from input to verdict.
-  - Delegates tasks to Critic and Reviser agents.
-- 🧠 **Critic**:
-	- Uses DuckDuckGo via MCP to gather real-time external evidence.
--	✍️ **Reviser**:
-	- Refines and verifies the Critic’s conclusions using only reasoning.
++ 🧑‍⚖️ **Auditor**:
+  * Orchestrates the process from input to verdict.
+  * Delegates tasks to Critic and Reviser agents.
++ 🧠 **Critic**:
+  * Uses DuckDuckGo via MCP to gather real-time external evidence.
++ ✍️ **Reviser**:
+  * Refines and verifies the Critic’s conclusions using only reasoning.
 
 **🧠 All agents use the Docker Model Runner for LLM-based inference.**
 
@@ -88,7 +91,6 @@ Example question:
 | `agents/agent.py`    | Auditor agent coordinating between the critic and the reviser |
 | `agents/`            | Contains core logic for critic and reviser agents             |
 | `agents/sub_agents/` | Submodules for critic and reviser roles                       |
-
 
 # 🔧 Architecture Overview
 
@@ -115,10 +117,10 @@ flowchart TD
 
 ```
 
-- The Auditor is a Sequential Agent, it coordinates Critic and Reviser agents to verify user-provided claims.
-- The Critic agent performs live web searches through DuckDuckGo using an MCP-compatible gateway.
-- The Reviser agent refines the Critic’s conclusions using internal reasoning alone.
-- All agents run inference through a Docker-hosted Model Runner, enabling fully containerized LLM reasoning.
++ The Auditor is a Sequential Agent, it coordinates Critic and Reviser agents to verify user-provided claims.
++ The Critic agent performs live web searches through DuckDuckGo using an MCP-compatible gateway.
++ The Reviser agent refines the Critic’s conclusions using internal reasoning alone.
++ All agents run inference through a Docker-hosted Model Runner, enabling fully containerized LLM reasoning.
 
 # 🤝 Agent Roles
 
@@ -128,7 +130,6 @@ flowchart TD
 | **Critic**  | ✅ DuckDuckGo via MCP | Gathers evidence to support or refute the claim                              |
 | **Reviser** | ❌ None               | Refines and finalizes the answer without external input                      |
 
-
 # 🧹 Cleanup
 
 To stop and remove containers and volumes:
@@ -137,15 +138,17 @@ To stop and remove containers and volumes:
 docker compose down -v
 ```
 
-
 # 📎 Credits
-- [ADK]
-- [DuckDuckGo]
-- [Docker Compose]
 
++ [ADK]
++ [DuckDuckGo]
++ [Docker Compose]
 
 [ADK]: https://google.github.io/adk-docs/
 [DuckDuckGo]: https://duckduckgo.com
 [Docker Compose]: https://github.com/docker/compose
 [Docker Desktop]: https://www.docker.com/products/docker-desktop/
+[Docker Engine]: https://docs.docker.com/engine/
 [Docker Model Runner]: https://docs.docker.com/ai/model-runner/
+[Docker Model Runner requirements]: https://docs.docker.com/ai/model-runner/
+[Docker Offload]: https://www.docker.com/products/docker-offload/

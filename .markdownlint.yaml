@@ -1,0 +1,21 @@
+# .markdownlint.yaml
+
+# MD001: Heading levels should only increment by one level at a time
+MD001: false
+
+# MD004: Unordered list style - allow different styles in sublists
+MD004:
+  style: sublist
+
+# MD013: Line length
+MD013:
+  line_length: 120
+  code_blocks: false
+  tables: false
+
+# MD025: Multiple top-level headings allowed
+MD025: false
+
+# MD033: Inline HTML
+MD033:
+  allowed_elements: [p, img]

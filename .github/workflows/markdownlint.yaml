@@ -1,0 +1,30 @@
+# .github/workflows/markdownlint.yml
+name: Lint
+
+on:
+  push:
+    paths:
+      - '**/*.md'
+      - '.github/workflows/markdownlint.yaml'
+    branches:
+      - main
+  pull_request:
+    paths:
+      - '**/*.md'
+      - '.github/workflows/markdownlint.yaml'
+
+permissions:
+  contents: read
+
+jobs:
+  lint-markdown:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Install Task
+        uses: arduino/setup-task@8b35f53e4d5a51bf691c94c71f2c7222483206cb
+
+      - name: Lint Markdown Files
+        run: task lint:markdown
