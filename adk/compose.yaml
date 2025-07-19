@@ -1,28 +1,35 @@
+version: "3.8"
+
 services:
   adk:
+    platform: linux/amd64
     build:
       context: .
     ports:
       # expose port for web interface
       - "8080:8080"
     environment:
-      # point adk at the MCP gateway
+      # point ADK at the MCP gateway
       - MCPGATEWAY_ENDPOINT=http://mcp-gateway:8811/sse
     depends_on:
       - mcp-gateway
     models:
-      gemma3 :
+      gemma3:
         endpoint_var: MODEL_RUNNER_URL
         model_var: MODEL_RUNNER_MODEL
 
   mcp-gateway:
     # mcp-gateway secures your MCP servers
     image: docker/mcp-gateway:latest
+    platform: linux/amd64
     use_api_socket: true
+    volumes:
+      # allow gateway to spin up MCP servers via Docker
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      # mount your custom MCP configuration
+      - ./mcp-config.yaml:/app/config.yaml:ro
     command:
       - --transport=sse
-      # add any MCP servers you want to use
-      - --servers=duckduckgo
 
 models:
   gemma3:

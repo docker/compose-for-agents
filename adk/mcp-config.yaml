@@ -1,0 +1,19 @@
+# mcp-config.yaml
+hostname: "0.0.0.0"
+port: 8811
+
+servers:
+  duckduckgo:
+    # explicitly tell the gateway how to run the MCP server
+    command: docker
+    args:
+      - run
+      - --rm
+      - -i
+      - --init
+      - --security-opt=no-new-privileges
+      - --cpus=1
+      - --memory=2Gb
+      - -e
+      - DDG_USER_AGENT="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
+      - mcp/duckduckgo:latest
