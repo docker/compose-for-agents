@@ -4,7 +4,7 @@ services:
     build:
       target: auditor-agent
     ports:
-      - "8080:8080"
+      - 8080:8080
     environment:
       - CRITIC_AGENT_URL=http://critic-agent-a2a:8001
       - REVISER_AGENT_URL=http://reviser-agent-a2a:8001

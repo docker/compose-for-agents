@@ -6,7 +6,7 @@ services:
     image: weaveworksdemos/front-end:0.3.12
     hostname: front-end
     ports:
-      - "9090:8079"
+      - 9090:8079
     restart: always
     cap_drop:
       - all
@@ -21,7 +21,7 @@ services:
       - NET_BIND_SERVICE
     read_only: true
     ports:
-      - "8081:80"
+      - 8081:80
     depends_on:
       - catalogue-db
   catalogue-db:
@@ -46,9 +46,9 @@ services:
     volumes:
       - ./data/mongodb:/docker-entrypoint-initdb.d:ro
       - mongodb_data:/data/db
-    command: ["mongod", "--quiet", "--logpath", "/var/log/mongodb/mongod.log", "--logappend", "--setParameter", "logComponentVerbosity={network:{verbosity:0}}"]
+    command: [mongod, --quiet, --logpath, /var/log/mongodb/mongod.log, --logappend, --setParameter, "logComponentVerbosity={network:{verbosity:0}}"]
     healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      test: [CMD, mongosh, --eval, db.adminCommand('ping')]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -84,7 +84,7 @@ services:
     secrets:
       - openai-api-key
     models:
-      qwen3 :
+      qwen3:
         endpoint_var: MODEL_RUNNER_URL
         model_var: MODEL_RUNNER_MODEL
 
@@ -111,9 +111,7 @@ models:
   qwen3:
     # pre-pull the model when starting Docker Model Runner
     model: ai/qwen3:14B-Q6_K
-    #context_size: 131000 # 35.5 GB VRAM
-    #runtime_flags:
-      #- --no-prefill-assistant
+    # context_size: 131000  # 35.5 GB VRAM
 
 volumes:
   mongodb_data:
