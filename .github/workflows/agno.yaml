@@ -3,14 +3,14 @@ name: Agno CI
 on:
   push:
     paths:
-      - '.github/workflows/agno.yaml'
-      - 'agno/**'
+      - .github/workflows/agno.yaml
+      - agno/**
     branches:
       - main
   pull_request:
     paths:
-      - '.github/workflows/agno.yaml'
-      - 'agno/**'
+      - .github/workflows/agno.yaml
+      - agno/**
 
 permissions:
   contents: read

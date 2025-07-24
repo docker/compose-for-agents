@@ -3,14 +3,14 @@ name: LangGraph CI
 on:
   push:
     paths:
-      - '.github/workflows/langgraph.yaml'
-      - 'langgraph/**'
+      - .github/workflows/langgraph.yaml
+      - langgraph/**
     branches:
       - main
   pull_request:
     paths:
-      - '.github/workflows/langgraph.yaml'
-      - 'langgraph/**'
+      - .github/workflows/langgraph.yaml
+      - langgraph/**
 
 permissions:
   contents: read

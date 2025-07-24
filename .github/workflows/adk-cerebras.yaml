@@ -3,14 +3,14 @@ name: ADK-CEREBRAS CI
 on:
   push:
     paths:
-      - '.github/workflows/adk-cerebras.yaml'
-      - 'adk-cerebras/**'
+      - .github/workflows/adk-cerebras.yaml
+      - adk-cerebras/**
     branches:
       - main
   pull_request:
     paths:
-      - '.github/workflows/adk-cerebras.yaml'
-      - 'adk-cerebras/**'
+      - .github/workflows/adk-cerebras.yaml
+      - adk-cerebras/**
 
 permissions:
   contents: read
@@ -38,6 +38,3 @@ jobs:
 
       - name: Check lint
         run: uv run ruff check
-
-      #- name: Check types
-      #  run: uv run pyright
