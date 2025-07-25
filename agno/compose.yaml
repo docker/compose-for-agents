@@ -9,6 +9,8 @@ services:
     environment:
       # point agents at the MCP gateway
       - MCPGATEWAY_URL=http://mcp-gateway:8811
+    depends_on:
+      - mcp-gateway
     volumes:
       # mount the agents file
       - ./agents.yaml:/agents.yaml
