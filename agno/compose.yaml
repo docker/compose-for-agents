@@ -38,7 +38,7 @@ services:
     command:
       - --transport=streaming
       # securely embed secrets into the gateway
-      - --secrets=/run/secrets/mcp_secret
+      - --secrets=docker-desktop:/run/secrets/mcp_secret
       # add any MCP servers you want to use
       - --servers=github-official
       # add an interceptor to format and simplify the output of the GitHub issues tool
