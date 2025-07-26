@@ -1,0 +1,360 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap');
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #000;
+  color: #fff;
+  font-family: "Instrument Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.top-bar {
+  animation: gradient 6s linear infinite;
+  animation-direction: alternate;
+  background-blend-mode: hard-light;
+  background: linear-gradient(90deg, #ffce4a, #00dbdd);
+  background-size: 200% 100%;
+  height: 6px;
+  width: 100%;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0;
+  }
+  to {
+    background-position: 100%;
+  }
+}
+
+.container {
+  flex-grow: 1;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+h1, h2, h3 {
+  color: #ffce4a; /* Secondary color for headings */
+}
+
+h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -0.01562em;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.00833em;
+  margin-top: 40px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #00dbdd; /* Primary color for accent */
+  padding-bottom: 10px;
+}
+
+.form-section, .view-section {
+  background-color: #1a1a1a; /* Paper background */
+  padding: 25px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 1rem;
+  color: #aaa; /* Custom label color */
+}
+
+input[type="text"],
+input[type="number"],
+textarea,
+select {
+  width: calc(100% - 24px); /* Account for padding */
+  padding: 12px;
+  margin-bottom: 16px;
+  background-color: #1a1a1a; /* Input background */
+  color: #fff; /* Input text color */
+  border: 1px solid #aaa; /* Default border */
+  border-radius: 4px;
+  font-size: 1rem;
+  font-family: "Instrument Sans", sans-serif;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+textarea:focus,
+select:focus {
+  border-color: #00dbdd; /* Primary color on focus */
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 219, 221, 0.3);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.button {
+  text-transform: uppercase;
+  padding: 12px 24px;
+  background-color: #00dbdd; /* Primary color */
+  color: #000; /* Black text on primary button */
+  border: 1px solid #00dbdd;
+  border-radius: 0; /* Sharp corners like MUI example */
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  display: inline-block;
+  text-decoration: none;
+  margin-right: 10px;
+  margin-top: 10px;
+}
+
+.button:hover {
+  background-color: #000; /* Black background on hover */
+  color: #00dbdd; /* Primary color text on hover */
+}
+
+.button-secondary {
+  background-color: #ffce4a; /* Secondary color */
+  color: #000;
+  border-color: #ffce4a;
+}
+
+.button-secondary:hover {
+  background-color: #000;
+  color: #ffce4a;
+  border-color: #ffce4a;
+}
+
+.button-remove {
+  background-color: #4a4a4a; /* Dark grey, less prominent */
+  color: #ccc;
+  border: 1px solid #555;
+  text-transform: uppercase;
+  padding: 10px 20px; /* Slightly smaller padding if needed */
+  border-radius: 0;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.9rem; /* Slightly smaller font if needed */
+  transition: background-color 0.3s ease, color 0.3s ease;
+  display: inline-block;
+  text-decoration: none;
+  margin-right: 10px;
+  margin-top: 10px;
+}
+
+.button-remove:hover {
+  background-color: #555;
+  color: #fff;
+  border-color: #666;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin-top: 20px;
+}
+
+th, td {
+  padding: 12px 16px;
+  border-bottom: 4px solid #000; /* Darker border between rows */
+  text-align: left;
+  vertical-align: top;
+}
+
+thead th {
+  background-color: #1a1a1a; /* Paper background for header */
+  color: #ffce4a; /* Secondary color for header text */
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+/* Table Column Widths */
+#workOrdersTable th:nth-child(1) { width: 30%; } /* ID */
+#workOrdersTable th:nth-child(2) { width: 15%; } /* Items */
+#workOrdersTable th:nth-child(3) { width: 20%; } /* Current Step */
+#workOrdersTable th:nth-child(4) { width: 25%; } /* Errors */
+#workOrdersTable th:nth-child(5) { width: 10%; } /* Actions */
+
+tbody tr:nth-of-type(even) {
+  /* background-color: #1a1a1a; */ /* Zebra striping if needed, but theme.js used #1a1a1a as MuiTableRow root bg */
+}
+
+tbody tr {
+    background-color: #111; /* Slightly lighter than paper for row contrast */
+}
+
+tbody tr:hover {
+  background-color: #282828; /* Hover effect for rows */
+}
+
+.actions a {
+    margin-right: 8px;
+    color: #00dbdd;
+    text-decoration: none;
+}
+
+.actions a:hover {
+    color: #ffce4a;
+    text-decoration: underline;
+}
+
+/* Adjusted error text color */
+.errorsCell {
+    color: #ff8c00; /* DarkOrange - for errors in table */
+}
+
+/* Modal (for updating work order) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.6); /* Dimmed background */
+}
+
+.modal-content {
+  background-color: #1a1a1a; /* Paper background */
+  margin: 10% auto;
+  padding: 30px;
+  border: 1px solid #333;
+  width: 60%;
+  max-width: 700px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+  position: relative;
+}
+
+.close-button {
+  color: #aaa;
+  position: absolute;
+  top: 15px;
+  right: 25px;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close-button:hover,
+.close-button:focus {
+  color: #fff;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Footer */
+footer {
+    background-color: #1a1a1a;
+    color: #aaa;
+    text-align: center;
+    padding: 15px 0;
+    margin-top: auto; /* Pushes footer to the bottom */
+    font-size: 0.875rem;
+}
+
+footer p {
+    margin: 0;
+}
+
+/* Toast Notification Styles */
+#toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 2000; /* Ensure it's above other elements like modals */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.toast {
+  background-color: #2c2c2c; /* Darker than paper, but not black */
+  color: #fff;
+  padding: 15px 25px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+  opacity: 0;
+  transform: translateX(100%);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  border-left: 5px solid #00dbdd; /* Default to success (primary color) */
+  min-width: 250px;
+  max-width: 400px;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.toast.success {
+  border-left-color: #00dbdd; /* Cyan - Primary color */
+}
+
+.toast.error {
+  border-left-color: #ff8c00; /* DarkOrange - A less jarring error color */
+}
+
+.toast.warning {
+  border-left-color: #ffce4a; /* Amber - Secondary color */
+}
+
+.result-card {
+  background-color: #1a1a1a;
+  border-left: 4px solid #00dbdd;
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.result-block {
+  margin-bottom: 20px;
+}
+
+.result-block h3 {
+  color: #ffce4a;
+  font-size: 1.25rem;
+  margin-bottom: 10px;
+}
+
+.result-block p {
+  color: #eee;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.result-meta {
+  font-size: 0.95rem;
+  color: #aaa;
+  border-top: 1px solid #333;
+  padding-top: 15px;
+}
+
+.status-completed {
+  color: #00dbdd;
+  font-weight: bold;
+}

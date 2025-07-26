@@ -1,0 +1,39 @@
+services:
+  postgres-db:
+    image: postgres:latest
+    container_name: postgres_db
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    healthcheck:
+      test: [ 'CMD', 'pg_isready', "-q", "-d", "postgres", "-U", "postgres" ]
+      interval: 5s
+      retries: 5
+      start_period: 5s
+      timeout: 5s
+
+  helloworld-agent:
+    image: helloworld-agent:latest
+    container_name: helloworld-agent
+    depends_on:
+      - postgres-db
+    ports:
+      - "9000:9000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ${HOME}/.akka/local:/root/.akka/local
+      - ./poststart.sh:/poststart.sh
+    environment:
+      # jvm -D properties can be added under this environment map (note: remove this comment when adding properties)
+      #JAVA_TOOL_OPTIONS: -Dconfig.resource=/root/.akka/local/api-key.conf
+      STANDALONE_SINGLE_NODE: true
+      DB_HOST: "postgres-db"
+      HTTP_PORT: "9000"
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+
+networks:
+  network:
+    driver: bridge
