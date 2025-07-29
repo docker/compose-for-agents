@@ -12,8 +12,8 @@ import (
 
 // chat is the main function that initializes the LLM, MCP tools, and runs the agent.
 // It receives the question and the MCP gateway URL, returning the answer from the agent.
-func chat(question string, mcpGatewayURL string) (string, error) {
-	llm, err := initializeLLM()
+func chat(question string, mcpGatewayURL string, apiKey string, baseURL string, modelName string) (string, error) {
+	llm, err := initializeLLM(apiKey, baseURL, modelName)
 	if err != nil {
 		return "", fmt.Errorf("initialize LLM: %v", err)
 	}

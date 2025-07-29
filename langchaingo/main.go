@@ -28,15 +28,6 @@ func main() {
 		mcpGatewayURL = "http://localhost:8811"
 	}
 
-	result, err := chat(question, mcpGatewayURL)
-	if err != nil {
-		log.Fatalf("Failed to chat: %v", err)
-	}
-
-	log.Println("ASSISTANT:", result)
-}
-
-func initializeLLM() (llms.Model, error) {
 	// Get OpenAI configuration from environment
 	apiKey := os.Getenv("OPENAI_API_KEY")
 	if apiKey == "" {
@@ -53,6 +44,15 @@ func initializeLLM() (llms.Model, error) {
 		modelName = "gpt-3.5-turbo" // Default model
 	}
 
+	result, err := chat(question, mcpGatewayURL, apiKey, baseURL, modelName)
+	if err != nil {
+		log.Fatalf("Failed to chat: %v", err)
+	}
+
+	log.Println("ASSISTANT:", result)
+}
+
+func initializeLLM(apiKey string, baseURL string, modelName string) (llms.Model, error) {
 	// Create OpenAI client
 	return openai.New(
 		openai.WithToken(apiKey),
