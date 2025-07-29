@@ -33,6 +33,21 @@ docker compose up
 
 No setup, API keys, or additional configuration required.
 
+### Test the project
+
+```sh
+go test -v ./...
+```
+
+This command runs the tests in the project, using [Testcontainers Go] to spin up the different containers needed for the tests:
+
+1. [Docker Model Runner]: a socat container to forward the model runner's API to the test process.
+2. [Docker MCP Gateway]: Docker's MCP gateway container to facilitate the access to the MCP servers and tools.
+
+No port conflicts happen, thanks to the [Testcontainers Go] library, which automatically exposes the known ports of the containers on a random, free port in the host. Therefore, you can run the tests as many times as you want, even without stopping the Docker Compose application.
+
+All containers started by [Testcontainers Go] are automatically cleaned up after the tests finish, so you don't need to worry about cleaning them up manually.
+
 # 🧠 Inference Options
 
 By default, this project uses [Docker Model Runner] to handle LLM inference locally — no internet
@@ -108,10 +123,12 @@ flowchart TD
 
 [DuckDuckGo]: https://duckduckgo.com
 [Langchaingo]: https://github.com/tmc/langchaingo
+[Testcontainers Go]: https://github.com/testcontainers/testcontainers-go
 [Model Context Protocol's Go SDK]: https://github.com/modelcontextprotocol/go-sdk/
 [Docker Compose]: https://github.com/docker/compose
 [Docker Desktop]: https://www.docker.com/products/docker-desktop/
 [Docker Engine]: https://docs.docker.com/engine/
 [Docker Model Runner]: https://docs.docker.com/ai/model-runner/
+[Docker MCP Gateway]: https://docs.docker.com/ai/mcp-gateway/
 [Docker Model Runner requirements]: https://docs.docker.com/ai/model-runner/
 [Docker Offload]: https://www.docker.com/products/docker-offload/
