@@ -82,7 +82,7 @@ func initializeMCPTools(client *mcp.Client, mcpGatewayURL string) ([]tools.Tool,
 		switch tool.Name {
 		case "fetch_content":
 		case "search":
-			args["max_results"] = 3
+			args["max_results"] = 10
 		default:
 			errs = append(errs, fmt.Errorf("unsupported tool: %s", tool.Name))
 		}
