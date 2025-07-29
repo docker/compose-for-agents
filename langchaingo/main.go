@@ -24,6 +24,12 @@ func main() {
 
 	log.Println("QUESTION:", question)
 
+	// Get MCP gateway URL from environment
+	mcpGatewayURL := os.Getenv("MCP_GATEWAY_URL")
+	if mcpGatewayURL == "" {
+		mcpGatewayURL = "http://localhost:8811"
+	}
+
 	llm, err := initializeLLM()
 	if err != nil {
 		log.Fatalf("Failed to initialize LLM: %v", err)
@@ -32,7 +38,7 @@ func main() {
 	// Create a new client, with no features.
 	client := mcp.NewClient(&mcp.Implementation{Name: "mcp-client", Version: "v1.0.0"}, nil)
 
-	toolBelt, err := initializeMCPTools(client)
+	toolBelt, err := initializeMCPTools(client, mcpGatewayURL)
 	if err != nil {
 		log.Fatalf("Failed to call tool: %v", err)
 	}
@@ -73,13 +79,7 @@ func initializeLLM() (llms.Model, error) {
 	)
 }
 
-func initializeMCPTools(client *mcp.Client) ([]tools.Tool, error) {
-	// Get MCP gateway URL from environment
-	mcpGatewayURL := os.Getenv("MCP_GATEWAY_URL")
-	if mcpGatewayURL == "" {
-		mcpGatewayURL = "http://localhost:8811"
-	}
-
+func initializeMCPTools(client *mcp.Client, mcpGatewayURL string) ([]tools.Tool, error) {
 	transport := mcp.NewSSEClientTransport(mcpGatewayURL, nil)
 
 	cs, err := client.Connect(context.Background(), transport)
