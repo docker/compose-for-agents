@@ -26,7 +26,7 @@ func chat(question string, mcpGatewayURL string, apiKey string, baseURL string, 
 		return "", fmt.Errorf("initialize MCP tools: %v", err)
 	}
 
-	agent := agents.NewOneShotAgent(llm, toolBelt, agents.WithCallbacksHandler(callbacks.LogHandler{}), agents.WithMaxIterations(10))
+	agent := agents.NewOneShotAgent(llm, toolBelt, agents.WithCallbacksHandler(callbacks.LogHandler{}))
 	executor := agents.NewExecutor(agent)
 
 	answer, err := chains.Run(context.Background(), executor, question)
