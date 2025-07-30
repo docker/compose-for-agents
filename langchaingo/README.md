@@ -39,10 +39,10 @@ No setup, API keys, or additional configuration required.
 go test -v ./...
 ```
 
-This command runs the tests in the project, using [Testcontainers Go] to spin up the different containers needed for the tests:
+This command runs all the tests in the project, using [Testcontainers Go] to spin up the different containers needed for the tests:
 
-1. [Docker Model Runner]: a socat container to forward the model runner's API to the test process.
-2. [Docker MCP Gateway]: Docker's MCP gateway container to facilitate the access to the MCP servers and tools.
+1. [Docker Model Runner]: a socat container to forward the model runner's API to the test process. It allows to talk to the local LLM models, provided by [Docker Desktop], from the test process.
+2. [Docker MCP Gateway]: Docker's MCP gateway container to facilitate the access to the MCP servers and tools. It allows to talk to the MCP servers provided by [Docker Desktop], in this case DuckDuckGo, from the test process.
 
 No port conflicts happen, thanks to the [Testcontainers Go] library, which automatically exposes the known ports of the containers on a random, free port in the host. Therefore, you can run the tests as many times as you want, even without stopping the Docker Compose application.
 
@@ -56,6 +56,16 @@ Run this test with:
 
 ```sh
 go test -v -run TestChat_stringComparison ./...
+```
+
+#### Cosine similarity tests
+
+This test is a more robust test that checks if the answer is correct by using the cosine similarity between the reference answer and the answer of the model. To calculate the cosine similarity, the test obtains the embeddings of the reference answer and the answer of the model, and then calculates the cosine similarity between them. If the result is greater than a threshold, which is defined by the team, the test is considered to be passed.
+
+Run this test with:
+
+```sh
+go test -v -run TestChat_embeddings ./...
 ```
 
 #### Evaluator tests
@@ -144,6 +154,7 @@ flowchart TD
 + [Langchaingo]
 + [DuckDuckGo]
 + [Docker Compose]
++ [Testcontainers Go]
 
 [DuckDuckGo]: https://duckduckgo.com
 [Langchaingo]: https://github.com/tmc/langchaingo

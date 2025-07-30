@@ -9,6 +9,7 @@ import (
 	"github.com/testcontainers/testcontainers-go"
 	dmcpg "github.com/testcontainers/testcontainers-go/modules/dockermcpgateway"
 	"github.com/testcontainers/testcontainers-go/modules/dockermodelrunner"
+	"github.com/tmc/langchaingo/embeddings"
 )
 
 const (
@@ -43,6 +44,52 @@ func TestChat_stringComparison(t *testing.T) {
 	require.NoError(t, err)
 	require.NotEmpty(t, answer)
 	require.Contains(t, answer, "https://github.com/modelcontextprotocol/go-sdk")
+}
+
+func TestChat_embeddings(t *testing.T) {
+	embeddingModel, dmrBaseURL := buildEmbeddingsModel(t)
+
+	embedder, err := embeddings.NewEmbedder(embeddingModel)
+	require.NoError(t, err)
+
+	reference := `Golang does have an official Go SDK for Model Context Protocol servers and clients, which is maintained in collaboration with Google.
+It's URL is https://github.com/modelcontextprotocol/go-sdk`
+
+	// calculate the embeddings for the reference answer
+	referenceEmbeddings, err := embedder.EmbedDocuments(context.Background(), []string{reference})
+	require.NoError(t, err)
+
+	ctx := context.Background()
+
+	// Docker MCP Gateway container, which talks to the MCP servers, in this case DuckDuckGo
+	mcpgCtr, err := dmcpg.Run(
+		ctx, "docker/mcp-gateway:latest",
+		dmcpg.WithTools("duckduckgo", []string{"search", "fetch_content"}),
+	)
+	testcontainers.CleanupContainer(t, mcpgCtr)
+	require.NoError(t, err)
+
+	mcpGatewayURL, err := mcpgCtr.GatewayEndpoint(ctx)
+	require.NoError(t, err)
+
+	question := "Does Golang support the Model Context Protocol? Please provide some references."
+	answer, err := chat(question, mcpGatewayURL, "no-apiKey", dmrBaseURL, fqModelName)
+	require.NoError(t, err)
+	require.NotEmpty(t, answer)
+
+	t.Logf("answer: %s", answer)
+
+	// calculate the embeddings for the answer of the model
+	answerEmbeddings, err := embedder.EmbedDocuments(context.Background(), []string{answer})
+	require.NoError(t, err)
+
+	// calculate the cosine similarity between the reference and the answer
+	cosineSimilarity := cosineSimilarity(t, referenceEmbeddings[0], answerEmbeddings[0])
+	t.Logf("cosine similarity: %f", cosineSimilarity)
+
+	// Define a threshold for the cosine similarity: this is a team decision to accept or reject the answer
+	// within the given threshold.
+	require.Greater(t, cosineSimilarity, float32(0.8))
 }
 
 func TestChat_usingEvaluator(t *testing.T) {
