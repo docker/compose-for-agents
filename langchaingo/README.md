@@ -39,18 +39,25 @@ No setup, API keys, or additional configuration required.
 go test -v ./...
 ```
 
-This command runs all the tests in the project, using [Testcontainers Go] to spin up the different containers needed for the tests:
+This command runs all the tests in the project, using [Testcontainers Go] to spin up the different
+containers needed for the tests:
 
-1. [Docker Model Runner]: a socat container to forward the model runner's API to the test process. It allows to talk to the local LLM models, provided by [Docker Desktop], from the test process.
-2. [Docker MCP Gateway]: Docker's MCP gateway container to facilitate the access to the MCP servers and tools. It allows to talk to the MCP servers provided by [Docker Desktop], in this case DuckDuckGo, from the test process.
+1. [Docker Model Runner]: a socat container to forward the model runner's API to the test process.
+It allows to talk to the local LLM models, provided by [Docker Desktop], from the test process.
+2. [Docker MCP Gateway]: Docker's MCP gateway container to facilitate the access to the MCP servers and tools.
+It allows to talk to the MCP servers provided by [Docker Desktop], in this case DuckDuckGo, from the test process.
 
-No port conflicts happen, thanks to the [Testcontainers Go] library, which automatically exposes the known ports of the containers on a random, free port in the host. Therefore, you can run the tests as many times as you want, even without stopping the Docker Compose application.
+No port conflicts happen, thanks to the [Testcontainers Go] library, which automatically exposes the known ports
+of the containers on a random, free port in the host. Therefore, you can run the tests as many times as you want,
+even without stopping the Docker Compose application.
 
-All containers started by [Testcontainers Go] are automatically cleaned up after the tests finish, so you don't need to worry about cleaning them up manually.
+All containers started by [Testcontainers Go] are automatically cleaned up after the tests finish,
+so you don't need to worry about cleaning them up manually.
 
 #### String comparison tests
 
-This test is a simple test that checks if the answer is correct by comparing it to a reference answer. As you can imagine, given the non-deterministic nature of the LLM, this check is not very robust.
+This test is a simple test that checks if the answer is correct by comparing it to a reference answer.
+As you can imagine, given the non-deterministic nature of the LLM, this check is not very robust.
 
 Run this test with:
 
@@ -60,7 +67,11 @@ go test -v -run TestChat_stringComparison ./...
 
 #### Cosine similarity tests
 
-This test is a more robust test that checks if the answer is correct by using the cosine similarity between the reference answer and the answer of the model. To calculate the cosine similarity, the test obtains the embeddings of the reference answer and the answer of the model, and then calculates the cosine similarity between them. If the result is greater than a threshold, which is defined by the team, the test is considered to be passed.
+This test is a more robust test that checks if the answer is correct by using the cosine similarity
+between the reference answer and the answer of the model. To calculate the cosine similarity,
+the test obtains the embeddings of the reference answer and the answer of the model,
+and then calculates the cosine similarity between them. If the result is greater than a threshold,
+which is defined by the team, the test is considered to be passed.
 
 Run this test with:
 
@@ -70,7 +81,10 @@ go test -v -run TestChat_embeddings ./...
 
 #### RAG tests
 
-This test is a more robust test that checks if the answer is correct by using the RAG technique. It creates a Weaviate store to store the content that will serve as a reference, and it uses the built-in mechanisms in the Vector Database to obtain the most relevant documents to the question. Then, it includes those relevant documents in the prompt of the LLM to answer the question.
+This test is a more robust test that checks if the answer is correct by using the RAG technique.
+It creates a Weaviate store to store the content that will serve as a reference, and it uses the built-in mechanisms
+in the Vector Database to obtain the most relevant documents to the question. Then, it includes
+those relevant documents in the prompt of the LLM to answer the question.
 
 Run this test with:
 
@@ -80,10 +94,14 @@ go test -v -run TestChat_rag ./...
 
 #### Evaluator tests
 
-This test uses the concept of [LLM-as-a-judge] to evaluate the accuracy of the answer. It creates an evaluator, using another LLM, maybe with a more specialised, different model, to evaluate the accuracy of the answer. For that, it uses a strict system message and a user message that forces the LLM to return a JSON object with the following fields:
-- "provided_answer": the answer to the question
-- "is_correct": true if the answer is correct, false otherwise
-- "reasoning": the reasoning behind the answer
+This test uses the concept of [LLM-as-a-judge] to evaluate the accuracy of the answer. It creates an evaluator,
+using another LLM, maybe with a more specialised, different model, to evaluate the accuracy of the answer.
+For that, it uses a strict system message and a user message that forces the LLM to return a JSON object
+with the following fields:
+
++ "provided_answer": the answer to the question
++ "is_correct": true if the answer is correct, false otherwise
++ "reasoning": the reasoning behind the answer
 The response should be a valid JSON object.
 
 Run this test with:
