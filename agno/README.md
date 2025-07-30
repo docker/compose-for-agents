@@ -37,7 +37,7 @@ a **Writer** agent that summarizes and categorizes them into a comprehensive mar
    github.personal_access_token=ghp_XXXXX
    ```
 
-   or 
+   or
 
    - set the MCP secret in Docker Desktop and export if you're running with Docker Offload.
 

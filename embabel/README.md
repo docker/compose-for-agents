@@ -20,7 +20,8 @@ It demonstrates the power of the [Embabel agent framework](https://www.github.co
 ### Clone the project repository
 
 > [!IMPORTANT]
-> The compose.yaml file is in an [upstream repository](https://github.com/embabel/tripper). To try out this project, you'll have to first clone the repo.
+> The compose.yaml file is in an [upstream repository](https://github.com/embabel/tripper).
+> To try out this project, you'll have to first clone the repo.
 
 ```sh
 git clone git@github.com:embabel/tripper.git
