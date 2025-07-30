@@ -3,13 +3,17 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 	"github.com/testcontainers/testcontainers-go"
 	dmcpg "github.com/testcontainers/testcontainers-go/modules/dockermcpgateway"
 	"github.com/testcontainers/testcontainers-go/modules/dockermodelrunner"
+	"github.com/tmc/langchaingo/agents"
 	"github.com/tmc/langchaingo/embeddings"
+	"github.com/tmc/langchaingo/schema"
+	"github.com/tmc/langchaingo/vectorstores"
 )
 
 const (
@@ -90,6 +94,64 @@ It's URL is https://github.com/modelcontextprotocol/go-sdk`
 	// Define a threshold for the cosine similarity: this is a team decision to accept or reject the answer
 	// within the given threshold.
 	require.Greater(t, cosineSimilarity, float32(0.8))
+}
+
+func TestChat_rag(t *testing.T) {
+	const question = "Does Golang support the Model Context Protocol? Please provide some references."
+
+	embeddingModel, dmrBaseURL := buildEmbeddingsModel(t)
+
+	embedder, err := embeddings.NewEmbedder(embeddingModel)
+	require.NoError(t, err)
+
+	reference := `Golang does have an official Go SDK for Model Context Protocol servers and clients, which is maintained in collaboration with Google.
+It's URL is https://github.com/modelcontextprotocol/go-sdk`
+
+	// create a new Weaviate store to store the reference answer
+	store, err := NewStore(t, embedder)
+	require.NoError(t, err)
+
+	_, err = store.AddDocuments(context.Background(), []schema.Document{
+		{
+			PageContent: reference,
+		},
+	})
+	require.NoError(t, err)
+
+	optionsVector := []vectorstores.Option{
+		vectorstores.WithScoreThreshold(0.80), // use for precision, when you want to get only the most relevant documents
+		vectorstores.WithEmbedder(embedder),   // use when you want add documents or doing similarity search
+	}
+
+	relevantDocs, err := store.SimilaritySearch(context.Background(), question, 1, optionsVector...)
+	require.NoError(t, err)
+	require.NotEmpty(t, relevantDocs)
+
+	ctx := context.Background()
+
+	// Docker MCP Gateway container, which talks to the MCP servers, in this case DuckDuckGo
+	mcpgCtr, err := dmcpg.Run(
+		ctx, "docker/mcp-gateway:latest",
+		dmcpg.WithTools("duckduckgo", []string{"search", "fetch_content"}),
+	)
+	testcontainers.CleanupContainer(t, mcpgCtr)
+	require.NoError(t, err)
+
+	mcpGatewayURL, err := mcpgCtr.GatewayEndpoint(ctx)
+	require.NoError(t, err)
+
+	answer, err := chat(
+		question,
+		mcpGatewayURL,
+		"no-apiKey",
+		dmrBaseURL,
+		fqModelName,
+		agents.WithPromptSuffix(fmt.Sprintf("Use the following relevant documents to answer the question: %s", relevantDocs[0].PageContent)),
+	)
+	require.NoError(t, err)
+	require.NotEmpty(t, answer)
+
+	t.Logf("answer: %s", answer)
 }
 
 func TestChat_usingEvaluator(t *testing.T) {

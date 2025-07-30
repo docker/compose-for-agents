@@ -68,6 +68,16 @@ Run this test with:
 go test -v -run TestChat_embeddings ./...
 ```
 
+#### RAG tests
+
+This test is a more robust test that checks if the answer is correct by using the RAG technique. It creates a Weaviate store to store the content that will serve as a reference, and it uses the built-in mechanisms in the Vector Database to obtain the most relevant documents to the question. Then, it includes those relevant documents in the prompt of the LLM to answer the question.
+
+Run this test with:
+
+```sh
+go test -v -run TestChat_rag ./...
+```
+
 #### Evaluator tests
 
 This test uses the concept of [LLM-as-a-judge] to evaluate the accuracy of the answer. It creates an evaluator, using another LLM, maybe with a more specialised, different model, to evaluate the accuracy of the answer. For that, it uses a strict system message and a user message that forces the LLM to return a JSON object with the following fields:
