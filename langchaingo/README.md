@@ -48,6 +48,30 @@ No port conflicts happen, thanks to the [Testcontainers Go] library, which autom
 
 All containers started by [Testcontainers Go] are automatically cleaned up after the tests finish, so you don't need to worry about cleaning them up manually.
 
+#### String comparison tests
+
+This test is a simple test that checks if the answer is correct by comparing it to a reference answer. As you can imagine, given the non-deterministic nature of the LLM, this check is not very robust.
+
+Run this test with:
+
+```sh
+go test -v -run TestChat_stringComparison ./...
+```
+
+#### Evaluator tests
+
+This test uses the concept of [LLM-as-a-judge] to evaluate the accuracy of the answer. It creates an evaluator, using another LLM, maybe with a more specialised, different model, to evaluate the accuracy of the answer. For that, it uses a strict system message and a user message that forces the LLM to return a JSON object with the following fields:
+- "provided_answer": the answer to the question
+- "is_correct": true if the answer is correct, false otherwise
+- "reasoning": the reasoning behind the answer
+The response should be a valid JSON object.
+
+Run this test with:
+
+```sh
+go test -v -run TestChat_usingEvaluator ./...
+```
+
 # 🧠 Inference Options
 
 By default, this project uses [Docker Model Runner] to handle LLM inference locally — no internet
@@ -123,6 +147,7 @@ flowchart TD
 
 [DuckDuckGo]: https://duckduckgo.com
 [Langchaingo]: https://github.com/tmc/langchaingo
+[LLM-as-a-judge]: https://eugeneyan.com/writing/llm-evaluators/
 [Testcontainers Go]: https://github.com/testcontainers/testcontainers-go
 [Model Context Protocol's Go SDK]: https://github.com/modelcontextprotocol/go-sdk/
 [Docker Compose]: https://github.com/docker/compose
