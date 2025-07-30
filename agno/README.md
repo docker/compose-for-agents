@@ -34,7 +34,18 @@ a **Writer** agent that summarizes and categorizes them into a comprehensive mar
    - Add your GitHub token to the `.mcp.env` file:
   
    ```sh
-   GITHUB_PERSONAL_ACCESS_TOKEN=your_token_here
+   github.personal_access_token=ghp_XXXXX
+   ```
+
+   or 
+
+   - set the MCP secret in Docker Desktop and export if you're running with Docker Offload.
+
+   ```sh
+   touch .mcp.env
+   docker mcp secret set 'github.personal_access_token=ghp_XXXXX'
+   # only needed if running with Docker Offload
+   docker mcp secret export > .mcp.env
    ```
 
 ### Run the Project

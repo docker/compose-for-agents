@@ -79,8 +79,10 @@ async def create_mcp_tools(tools_list: list[str], entity_type: str) -> list[Tool
     transport: str = ""
     if gateway_url.startswith("http://") or gateway_url.startswith("https://"):
         url = gateway_url
-        transport = "sse"
-        print(f"DEBUG: {entity_type} connecting to MCP gateway via SSE {url}")
+        transport = "streamable-http"
+        print(
+            f"DEBUG: {entity_type} connecting to MCP gateway via streamable-http {url}"
+        )
     else:
         # Assume it's a TCP endpoint
         tcp_endpoint = gateway_url
