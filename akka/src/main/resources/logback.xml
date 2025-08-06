@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Non json config for Akka user dev modes -->
+<configuration>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %-5level %rewriteLogger{36} - %rewriteMsg%n</pattern>
+        </encoder>
+    </appender>
+
+    <conversionRule conversionWord="rewriteLogger" class="akka.runtime.logging.LogbackDevModeRewriteLogger"/>
+    <conversionRule conversionWord="rewriteMsg" class="akka.runtime.logging.LogbackDevModeRewriteMessage"/>
+
+    <!-- Silence some logs from Kalix/Akka should not be important to user/SDK dev mode -->
+    <logger name="akka" level="WARN"/>
+    <logger name="kalix" level="WARN"/>
+
+    <!-- Here goes the runtime logs that we want to expose to users. -->
+    <logger name="akka.runtime.AkkaRuntimeMain" level="INFO"/>
+    <logger name="kalix.runtime.DiscoveryManager" level="INFO"/>
+    <logger name="kalix.runtime.http.HttpEndpointMethodDefinition" level="INFO"/>
+    <logger name="kalix.runtime.VersionCheck" level="INFO"/>
+    <logger name="kalix.runtime.AkkaRuntimeConfigLoader" level="INFO"/>
+
+    <!-- Un-silence logs from the SDK -->
+    <logger name="akka.javasdk" level="INFO"/>
+
+    <!--
+    Users loggers in dev-mode are allowed to overwrite runtime loggers.
+    Therefore, we add them as last
+     -->
+    <include resource="include-dev-loggers.xml" optional="true"/>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+
+</configuration>
