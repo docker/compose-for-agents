@@ -1,10 +1,10 @@
 services:
   agents:
     build:
-        context: .
+      context: .
     environment:
       - MCP_SERVER_URL=http://mcp-gateway:8811/sse
-    restart: no
+    restart: "no"
     depends_on:
       - mcp-gateway
     models:

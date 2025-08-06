@@ -8,7 +8,7 @@ services:
 
 models:
   qwen3-large:
-    model: ai/qwen3:30B-A3B-Q4_K_M # 17.28 GB
-    context_size: 15000 # 20 GB VRAM
+    model: ai/qwen3:30B-A3B-Q4_K_M  # 17.28 GB
+    context_size: 15000  # 20 GB VRAM
     # increase context size to handle larger results
-    # context_size: 41000 # 24 GB VRAM
+    # context_size: 41000  # 24 GB VRAM

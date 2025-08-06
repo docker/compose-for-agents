@@ -3,14 +3,14 @@ name: A2A CI
 on:
   push:
     paths:
-      - '.github/workflows/a2a.yaml'
-      - 'a2a/**'
+      - .github/workflows/a2a.yaml
+      - a2a/**
     branches:
       - main
   pull_request:
     paths:
-      - '.github/workflows/a2a.yaml'
-      - 'a2a/**'
+      - .github/workflows/a2a.yaml
+      - a2a/**
 
 permissions:
   contents: read

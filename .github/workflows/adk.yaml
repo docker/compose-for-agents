@@ -3,14 +3,14 @@ name: ADK CI
 on:
   push:
     paths:
-      - '.github/workflows/adk.yaml'
-      - 'adk/**'
+      - .github/workflows/adk.yaml
+      - adk/**
     branches:
       - main
   pull_request:
     paths:
-      - '.github/workflows/adk.yaml'
-      - 'adk/**'
+      - .github/workflows/adk.yaml
+      - adk/**
 
 permissions:
   contents: read

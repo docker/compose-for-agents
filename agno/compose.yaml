@@ -5,7 +5,7 @@ services:
     build:
       context: agent
     ports:
-      - "7777:7777"
+      - 7777:7777
     environment:
       # point agents at the MCP gateway
       - MCPGATEWAY_URL=http://mcp-gateway:8811
@@ -24,7 +24,7 @@ services:
     build:
       context: agent-ui
     ports:
-      - "3000:3000"
+      - 3000:3000
     environment:
       - AGENTS_URL=http://localhost:7777
     depends_on:
@@ -43,31 +43,29 @@ services:
       - --servers=github-official
       # add an interceptor to format and simplify the output of the GitHub issues tool
       # this interceptor will convert the JSON output of the tool into a CSV format
-      - --interceptor
-      - after:exec:cat | jq '.content[0].text = (.content[0].text | fromjson | map(select(. != null) | [(.number // ""), (.state // ""), (.title // ""), (.user.login // ""), ((.labels // []) | map(.name) | join(";")), (.created_at // "")] | @csv) | join("\n"))'
     secrets:
       - mcp_secret
 
 models:
   qwen3-small:
     # pre-pull the model when starting Docker Model Runner
-    #model: ai/qwen3:30B-A3B-Q4_K_M
-    model: ai/qwen3:8B-Q4_0 # 4.44 GB
-    context_size: 15000 # 7 GB VRAM
+    # model: ai/qwen3:30B-A3B-Q4_K_M
+    model: ai/qwen3:8B-Q4_0  # 4.44 GB
+    context_size: 15000  # 7 GB VRAM
     # increase context size to handle larger results
-    # context_size: 41000 # 13 GB VRAM
+    # context_size: 41000  # 13 GB VRAM
   qwen3-medium:
-    model: ai/qwen3:14B-Q6_K # 11.28 GB
-    context_size: 15000 # 15 GB VRAM
+    model: ai/qwen3:14B-Q6_K  # 11.28 GB
+    context_size: 15000  # 15 GB VRAM
     # increase context size to handle larger results
-    # context_size: 41000 # 21 GB VRAM
+    # context_size: 41000  # 21 GB VRAM
 
-  # The qwen3-large model is defined in compose.offload.yaml
-  # because it requires more resources and is intended to run with Docker Offload.
-  # A recommended practice with Docker Compose is to isolate specialized configurations
-  # in override files. These files modify the base setup when applied,
-  # in our case:
-  # docker compose -f compose.yaml -f compose.offload.yaml up --build
+    # The qwen3-large model is defined in compose.offload.yaml
+    # because it requires more resources and is intended to run with Docker Offload.
+    # A recommended practice with Docker Compose is to isolate specialized configurations
+    # in override files. These files modify the base setup when applied,
+    # in our case:
+    # docker compose -f compose.yaml -f compose.offload.yaml up --build
 
 # mount the secrets file for MCP servers
 secrets:
