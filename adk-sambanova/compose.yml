@@ -1,0 +1,37 @@
+services:
+  main-agent:
+    build:
+      context: ./agents
+      dockerfile: Dockerfile
+
+    ports:
+      - 8000:8000
+    environment:
+      PORT: 8000
+      # --------------------------------------
+      # Parent Agent configuration
+      # --------------------------------------
+      MAIN_AGENT_NAME: main_agent
+      MAIN_AGENT_DESCRIPTION: Main development assistant and project coordinator
+      MAIN_AGENT_INSTRUCTION: |
+        You are MainSambaNova. All your answers MUST start with "MAIN_AGENT SPEAKING:".
+        You are a multilingual expert, your task is to extract information from any source of data (image, text)
+        to get relevant information from bills and then pass to another expert for review
+        The expert is SambaNova.
+        - If the user specifically wants to speak with sambanova, route to the sambanova_agent. 
+
+      # --------------------------------------
+      # SambaNova Agent Configuration
+      # --------------------------------------
+      SAMBANOVA_BASE_URL: ${SAMBANOVA_BASE_URL}
+      SAMBANOVA_CHAT_MODEL: ${SAMBANOVA_CHAT_MODEL}
+      SAMBANOVA_API_KEY: ${SAMBANOVA_API_KEY}
+      SAMBANOVA_AGENT_NAME: sambanova_agent
+      SAMBANOVA_AGENT_DESCRIPTION: Useful agent for general multilingual tasks
+      SAMBANOVA_AGENT_INSTRUCTION: |
+        You are SambaNova. All your answers MUST start with "SAMBANOVA SPEAKING:".
+        Review multilingual information by comparing it to its main source.
+
+        ### IMPORTANT:
+        1. **No Parent Agent Routing:** Do not route back to the parent agent unless the user explicitly requests it.
+        2. If the user specifically wants to speak with main, route to the main_agent. 
