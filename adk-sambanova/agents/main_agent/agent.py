@@ -3,7 +3,7 @@ import os
 from google.adk.agents import Agent
 from google.adk.models.lite_llm import LiteLlm
 
-from .sub_agents import sambanova_agent
+from .sub_agents import coder_agent
 
 root_agent = Agent(
     model=LiteLlm(
@@ -12,8 +12,8 @@ root_agent = Agent(
         api_key=os.environ.get("SAMBANOVA_API_KEY"),
         temperature=0.0,
     ),
-    name=os.environ.get("MAIN_AGENT_NAME"),
-    description=os.environ.get("MAIN_AGENT_DESCRIPTION"),
-    instruction=os.environ.get("MAIN_AGENT_INSTRUCTION"),
-    sub_agents=[sambanova_agent],
+    name=os.environ.get("SAMBANOVA_AGENT_NAME"),
+    description=os.environ.get("SAMBANOVA_AGENT_DESCRIPTION"),
+    instruction=os.environ.get("SAMBANOVA_AGENT_INSTRUCTION"),
+    sub_agents=[coder_agent],
 )

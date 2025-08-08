@@ -11,32 +11,32 @@ The system consists of two main agents orchestrated by Docker Compose, which pla
 ### 🐙 Docker Compose Orchestration
 
 - **Central Role**: Docker Compose serves as the foundation for the entire multi-agent system
-- **Service Orchestration**: Manages the lifecycle of all three agents (Main and SambaNova)
+- **Service Orchestration**: Manages the lifecycle of all three agents (SambaNova and Developer)
 - **Configuration Management**: Defines agent prompts, model configurations, and service dependencies
   directly in the compose file
 - **Network Coordination**: Establishes secure inter-agent communication channels
 - **Environment Management**: Handles API keys, model parameters, and runtime configurations
 
-### Agent Components
+### SambaNova Components
 
 ### 🦆 Main (Main Agent)
 
-- **Role**: Main assistant and project coordinator
+- **Role**: SambaNova assistant and project coordinator
 - **Model**: SambaNova Llama 4 Maverick (Llama-4-Maverick-17B-128E-Instruct)
 - **Provider**: SambaNova API
-- **Capabilities**: Routes requests to appropriate sub-agents based on user needs
+- **Capabilities**: Describe multimodal info and routes requests to appropriate sub-agent based on user needs
 
-### 🧠 SambaNova Agent
+### 🧠 Developer Agent
 
-- **Role**: Advanced multimodal problem-solving
-- **Model**: SambaNova Llama-4 Maverick (Llama-4-Maverick-17B-128E-Instruct)
-- **Provider**: SambaNova API
-- **Specialization**: Multimodal problem-solving scenarios
+- **Role**: Developer and problem-solving
+- **Model**: Qwen3-Coder
+- **Specialization**: programming problem-solving scenarios
 
 ## Features
 
 - **Multi-agent coordination**: Routing between specialized agents
-- **Multimodal expertise**: All agents specialize in multimodal (text and image)
+- **Multimodal expertise**: One agent specializes in multimodal (text and image)
+- **Coding expertise**: All agents specialize in coding
 - **FastAPI web interface**: RESTful API with web interface support
 - **Docker containerization**: Easy deployment with Docker Compose
 
@@ -84,18 +84,15 @@ The agents can be accessed through the web interface or API endpoints.
 
 **You can try this**:
 
+Upload an app diagram image, and then type:
+
 ```text
-Hello I'm Phil
-
-Main extract the image in <language>
-
-Explain the info
+Sambanova, describe this app
+Explain the info and the stack required to develop this app
 ```
 
 ```text
-Sambanova can you review this info
-
-Can you generate json format of this data
+Developer can you create a code from this description using python
 ```
 
 > ✋ For a public demo, stay simple, the above examples are working.

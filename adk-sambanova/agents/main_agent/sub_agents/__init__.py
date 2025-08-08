@@ -1,1 +1,1 @@
-from .sambanova.agent import sambanova_agent as sambanova_agent
+from .coder.agent import coder_agent as coder_agent
