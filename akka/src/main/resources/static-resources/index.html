@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="https://akka.io/favicon.ico" type="image/x-icon" />
+    <title>Akka's Chatbot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css">
+    <style>
+        #chat-box {
+            width: 100%;
+            height: 300px;
+            background-color: #111;
+            color: #fff;
+            border: 1px solid #aaa;
+            border-radius: 4px;
+            font-family: "Instrument Sans", sans-serif;
+            padding: 16px;
+            margin-bottom: 16px;
+            overflow-y: auto;
+            font-size: 1.05rem;
+            box-sizing: border-box;
+        }
+        .chat-message {
+            margin-bottom: 24px;
+            line-height: 1.5;
+            word-break: break-word;
+            display: flex;
+        }
+        .chat-message.user {
+            justify-content: flex-end;
+        }
+        .chat-message.bot {
+            justify-content: flex-start;
+        }
+        .bubble {
+            max-width: 70%;
+            padding: 10px 18px;
+            border-radius: 18px;
+            font-weight: 500;
+            font-size: 1.05rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .bubble.user-bubble {
+            background: linear-gradient(90deg, #00dbdd 80%, #ffce4a 100%);
+            color: #000;
+            border-bottom-right-radius: 4px;
+            border-bottom-left-radius: 18px;
+            border-top-left-radius: 18px;
+            border-top-right-radius: 18px;
+            margin-left: 40px;
+            font-weight: 600;
+        }
+        .bubble.bot-bubble {
+            background: #222;
+            color: #ffce4a;
+            border-bottom-left-radius: 4px;
+            border-bottom-right-radius: 18px;
+            border-top-left-radius: 18px;
+            border-top-right-radius: 18px;
+            margin-right: 40px;
+            font-weight: 500;
+        }
+        .chat-label {
+            color: #aaa;
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+        .hostname-row {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            margin-bottom: 0;
+        }
+        .hostname-span {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #00dbdd; /* Button blue */
+            letter-spacing: -0.01562em;
+            font-family: "Instrument Sans", sans-serif;
+            text-align: center;
+        }
+        .chat-title {
+            color: #ffce4a;
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: -0.01562em;
+            text-align: center;
+            margin: 0 0 30px 0;
+        }
+        .form-section {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .question-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        #question {
+            flex: 1;
+        }
+        #send-btn {
+            align-self: flex-start;
+            background: linear-gradient(90deg, #00dbdd 80%, #ffce4a 100%);
+            color: #000;
+            font-weight: 700;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        #send-btn:hover {
+            background: linear-gradient(90deg, #00b3b3 80%, #ffd700 100%);
+        }
+    </style>
+</head>
+
+<body>
+<div class="top-bar"></div>
+<div class="container">
+    <h1 class="chat-title">
+        Akka's Chatbot (<span id="hostname" class="hostname-span"></span>)
+    </h1>
+    <div class="form-section">
+        <form id="chat-form" autocomplete="off">
+            <label for="chat-box" class="chat-label">Chat</label>
+            <div id="chat-box"></div>
+
+            <label for="userId" class="chat-label">User</label>
+            <input type="text" id="userId" name="userId" required />
+
+            <label for="question" class="chat-label">Your Input</label>
+            <div class="question-group">
+                <input type="text" id="question" name="question" required />
+                <button type="submit" id="send-btn" class="button">Send</button>
+            </div>
+        </form>
+    </div>
+</div>
+<footer>
+    <p>Powered by Akka Agentic AI &copy; 2025</p>
+</footer>
+<script>
+    const chatBox = document.getElementById('chat-box');
+    const chatForm = document.getElementById('chat-form');
+    const userIdInput = document.getElementById('userId');
+    const questionInput = document.getElementById('question');
+    const sendBtn = document.getElementById('send-btn');
+    let historyEventSource = null;
+
+    function clearChatBox() {
+        chatBox.innerHTML = '';
+    }
+
+    function normalizeTextForComparison(text) {
+        // Remove HTML tags
+        let normalized = text.replace(/<[^>]+>/g, '');
+        // Decode HTML entities
+        const txt = document.createElement('textarea');
+        txt.innerHTML = normalized;
+        normalized = txt.value;
+        // Remove Markdown bold/italic/code
+        normalized = normalized.replace(/[*_`~]+/g, '');
+        // Convert all whitespace (including newlines, tabs) to single space
+        normalized = normalized.replace(/\s+/g, ' ');
+        // Trim
+        return normalized.trim();
+    }
+
+    const recentMessages = [];
+    const RECENT_MESSAGES_LIMIT = 50;
+
+    // Normalize text for comparison (reuse your existing function)
+    function normalizeTextForComparison(text) {
+        // Remove HTML tags except <br>
+        let normalized = text.replace(/<[^>]+>/g, '');
+        // Remove <br> tags (case-insensitive)
+        normalized = normalized.replace(/<br\s*\/?>/gi, '');
+        // Decode HTML entities
+        const txt = document.createElement('textarea');
+        txt.innerHTML = normalized;
+        normalized = txt.value;
+        // Remove Markdown bold/italic/code
+        normalized = normalized.replace(/[*_`~]+/g, '');
+        // Remove all whitespace characters (spaces, tabs, newlines, etc.)
+        normalized = normalized.replace(/\s+/g, '');
+        // Trim (just in case)
+        return normalized.trim().toLowerCase();
+    }
+
+    // Check last two messages for duplicates (from the same sender)
+    function isDuplicateRecentMessage(text, sender) {
+        const normalizedNew = normalizeTextForComparison(text);
+        // Filter messages by sender
+        const senderMessages = recentMessages.filter(msg => msg.sender === sender);
+        const len = senderMessages.length;
+        // Check last two messages (if available)
+        for (let i = Math.max(0, len - 2); i < len; i++) {
+            const msgText = senderMessages[i].text;
+            if (normalizeTextForComparison(msgText) === normalizedNew) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Call this after a message is sent/received
+    function addRecentMessage(text, sender) {
+        console.log("Adding new message: "+text);
+        recentMessages.push({ text, sender });
+        // Maintain a fixed size for the array
+        if (recentMessages.length > RECENT_MESSAGES_LIMIT) {
+            recentMessages.shift();
+        }
+    }
+
+    function appendMessage(text, sender) {
+        text = text.replace(/\n/g, '<br>');
+        console.log("text: ("+text+"); sender:("+sender+")");
+        if (isDuplicateRecentMessage(text, sender)) {
+            return; // Don't append duplicate
+        }
+        addRecentMessage(normalizeTextForComparison(text),sender);
+        const msgDiv = document.createElement('div');
+        msgDiv.className = 'chat-message ' + sender;
+        const bubble = document.createElement('span');
+        bubble.className = 'bubble ' + (sender === 'user' ? 'user-bubble' : 'bot-bubble');
+        if (sender === 'bot') {
+            bubble.innerHTML = `<strong>Chatbot:</strong><br>${text}`;
+        } else if (sender === 'user') {
+            bubble.innerHTML = `<strong>You:</strong><br>${text}`;
+        } else {
+            bubble.textContent = text;
+        }
+        msgDiv.appendChild(bubble);
+        chatBox.appendChild(msgDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+    function appendMessageStreamStart() {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = 'chat-message bot';
+        const bubble = document.createElement('span');
+        bubble.className = 'bubble bot-bubble';
+        bubble.innerHTML = `<strong>Chatbot:</strong><br>`;
+        msgDiv.appendChild(bubble);
+        chatBox.appendChild(msgDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+        return bubble;
+    }
+
+    function appendMessageStream(text, bubble) {
+        text = text.replace(/\n/g, '<br>');
+        console.log("text: ("+text+")");
+        bubble.innerHTML = bubble.innerHTML + text;
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function loadChatHistorySSE(userId) {
+        if (!userId) return;
+        clearChatBox();
+        if (historyEventSource) {
+            historyEventSource.close();
+            historyEventSource = null;
+        }
+        const url = `/${encodeURIComponent(userId)}/history-stream`;
+        historyEventSource = new EventSource(url);
+
+        historyEventSource.onmessage = function(event) {
+            if (!event.data || event.data.trim() === "") {
+                return;
+            }
+            try {
+                const dialog = JSON.parse(event.data);
+                if (!dialog || !dialog.text) return;
+                const sender = dialog.dialogSource === "USER" ? "user" : "bot";
+                appendMessage(extractQuestion(dialog).text, sender);
+            } catch (err) {
+                // Ignore parse errors
+            }
+        };
+
+        historyEventSource.onerror = function() {
+            if (historyEventSource) {
+                historyEventSource.close();
+                historyEventSource = null;
+            }
+        };
+    }
+
+    function extractQuestion(input) {
+        const match = input.match(/question:(.*)/);
+        return match ? match[1].trim() : input;
+    }
+
+    userIdInput.addEventListener('change', function() {
+        const userId = userIdInput.value.trim();
+        loadChatHistorySSE(userId);
+    });
+
+    questionInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendBtn.click();
+        }
+    });
+
+    function cleanBotData(data) {
+        let parsed = data.trim();
+        try {
+            if (
+                (parsed.startsWith('"') && parsed.endsWith('"')) ||
+                (parsed.startsWith("'") && parsed.endsWith("'"))
+            ) {
+                parsed = JSON.parse(parsed);
+            }
+        } catch (e) {}
+        parsed = parsed.replace(/\r?\n/g, '<br>');
+        return parsed;
+    }
+
+    chatForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const userId = userIdInput.value.trim();
+        const question = questionInput.value.trim();
+        if (!userId || !question) return;
+
+        appendMessage(question, 'user');
+        sendBtn.disabled = true;
+
+        try {
+            const response = await fetch('/chat/ask', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ userId, question })
+            });
+            const bubble = appendMessageStreamStart();
+            if (!response.ok) {
+                appendMessageStream("[Error] Failed to get response from server.", bubble);
+                sendBtn.disabled = false;
+                return;
+            }
+
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+            let buffer = '';
+            let botParts = [];
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                buffer += decoder.decode(value, { stream: true });
+
+                let parts = buffer.split('\n');
+                buffer = parts.pop();
+
+                for (let part of parts) {
+                    if (part.startsWith('data:')) {
+                        let data = part.substring(5).trimStart();
+                        data = cleanBotData(data);
+                        botParts.push(data);
+                        appendMessageStream(data, bubble);
+                    }
+                }
+            }
+            if (botParts.length > 0) {
+                addRecentMessage(normalizeTextForComparison(botParts.join('<br>')),'bot');
+            }
+        } catch (err) {
+            appendMessage(`[Error] ${err.message}`, 'bot');
+        } finally {
+            sendBtn.disabled = false;
+            questionInput.value = '';
+            questionInput.focus();
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const hostnameSpan = document.getElementById('hostname');
+        if (hostnameSpan) {
+            const hostname = window.location.hostname;
+            if (hostname === "localhost") {
+                hostnameSpan.textContent = hostname;
+            } else {
+                const firstDot = hostname.indexOf('.');
+                const secondDot = hostname.indexOf('.', firstDot + 1);
+                if (firstDot !== -1 && secondDot !== -1) {
+                    hostnameSpan.textContent = hostname.substring(firstDot + 1, secondDot);
+                } else {
+                    hostnameSpan.textContent = hostname;
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>
