@@ -5,55 +5,67 @@ services:
     build:
       context: agent
     ports:
-      - "7777:7777"
+      - 7777:7777
     environment:
-      - OPENAI_API_KEY=$OPENAI_API_KEY
       # point agents at the MCP gateway
-      - MCPGATEWAY_ENDPOINT=http://mcp-gateway:8811/sse
+      - MCPGATEWAY_URL=http://mcp-gateway:8811
+    depends_on:
+      - mcp-gateway
     volumes:
       # mount the agents file
       - ./agents.yaml:/agents.yaml
-    depends_on:
-      # model_runner provider starts first then injects environment variables
-      # MODEL_RUNNER_MODEL name
-      # MODEL_RUNNER_URL OpenAI compatible API endpoint
-      - model_runner
+    models:
+      qwen3-small:
+        endpoint_var: MODEL_RUNNER_URL
+        model_var: MODEL_RUNNER_MODEL
 
   agents-ui:
     image: demo/ui
     build:
       context: agent-ui
     ports:
-      - "3000:3000"
+      - 3000:3000
     environment:
       - AGENTS_URL=http://localhost:7777
     depends_on:
       - agents
 
-  model_runner:
-    provider:
-      type: model
-      options:
-        # pre-pull the model when starting Docker Model Runner
-        model: ai/qwen3:30B-A3B-Q4_K_M
-        # increase context size to handle more github issues
-        context-size: 41000
-
   mcp-gateway:
-    # agents_gateway secures your MCP servers
-    image: docker/agents_gateway:v2
-    ports:
-      - "8811:8811"
+    # mcp-gateway secures your MCP servers
+    image: docker/mcp-gateway:latest
+    # use docker API socket to start MCP servers
+    use_api_socket: true
     command:
+      - --transport=streaming
       # securely embed secrets into the gateway
-      - --secrets=/run/secrets/mcp_secret
+      - --secrets=docker-desktop:/run/secrets/mcp_secret
       # add any MCP servers you want to use
       - --servers=github-official
-    volumes:
-      # mount docker socket to run MCP containers
-      - /var/run/docker.sock:/var/run/docker.sock
+      # add an interceptor to format and simplify the output of the GitHub issues tool
+      # this interceptor will convert the JSON output of the tool into a CSV format
     secrets:
       - mcp_secret
+
+models:
+  qwen3-small:
+    # pre-pull the model when starting Docker Model Runner
+    # model: ai/qwen3:30B-A3B-Q4_K_M
+    model: ai/qwen3:8B-Q4_0  # 4.44 GB
+    context_size: 15000  # 7 GB VRAM
+    # increase context size to handle larger results
+    # context_size: 41000  # 13 GB VRAM
+  qwen3-medium:
+    model: ai/qwen3:14B-Q6_K  # 11.28 GB
+    context_size: 15000  # 15 GB VRAM
+    # increase context size to handle larger results
+    # context_size: 41000  # 21 GB VRAM
+
+    # The qwen3-large model is defined in compose.offload.yaml
+    # because it requires more resources and is intended to run with Docker Offload.
+    # A recommended practice with Docker Compose is to isolate specialized configurations
+    # in override files. These files modify the base setup when applied,
+    # in our case:
+    # docker compose -f compose.yaml -f compose.offload.yaml up --build
 
 # mount the secrets file for MCP servers
 secrets:

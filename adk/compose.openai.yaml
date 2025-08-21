@@ -1,0 +1,10 @@
+services:
+  adk:
+    environment:
+      - OPENAI_MODEL_NAME=o3
+    secrets:
+      - openai-api-key
+
+secrets:
+  openai-api-key:
+    file: secret.openai-api-key

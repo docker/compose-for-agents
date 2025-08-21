@@ -1,3 +1,4 @@
+/secret.*
 /.vscode
 /.venv
 /.mypy_cache

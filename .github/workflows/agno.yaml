@@ -1,0 +1,60 @@
+name: Agno CI
+
+on:
+  push:
+    paths:
+      - .github/workflows/agno.yaml
+      - agno/**
+    branches:
+      - main
+  pull_request:
+    paths:
+      - .github/workflows/agno.yaml
+      - agno/**
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Format & Type Check
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: agno/agent
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH  # Make uv available
+
+      - name: Check format
+        run: uv run ruff format --check
+
+      - name: Check lint
+        run: uv run ruff check
+
+      - name: Check types
+        run: uv run pyright
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: agno
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Compose
+        uses: ./.github/actions/setup-compose
+
+      - name: Build Docker images
+        run: docker compose build

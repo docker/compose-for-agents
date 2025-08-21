@@ -1,0 +1,14 @@
+services:
+  agents:
+    # overrides model with a larger model
+    models: !override
+      qwen3-large:
+        endpoint_var: MODEL_RUNNER_URL
+        model_var: MODEL_RUNNER_MODEL
+
+models:
+  qwen3-large:
+    model: ai/qwen3:30B-A3B-Q4_K_M  # 17.28 GB
+    context_size: 15000  # 20 GB VRAM
+    # increase context size to handle larger results
+    # context_size: 41000  # 24 GB VRAM

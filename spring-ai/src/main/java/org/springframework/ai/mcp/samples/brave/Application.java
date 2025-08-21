@@ -32,7 +32,10 @@ public class Application {
 					.defaultToolCallbacks(new SyncMcpToolCallbackProvider(mcpSyncClients))
 					.build();
 
-			String question = "Does Spring AI supports the Model Context Protocol? Please provide some references.";
+			String question = System.getenv("QUESTION");
+			if (question == null || question.isBlank()) {
+				throw new IllegalStateException("Environment variable QUESTION must be set and non-empty.");
+			}
 			logger.info("QUESTION: {}\n", question);
 			logger.info("ASSISTANT: {}\n", chatClient.prompt(question).call().content());
 		};

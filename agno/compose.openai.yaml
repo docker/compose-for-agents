@@ -1,0 +1,11 @@
+services:
+
+  agents:
+    environment:
+      - OPENAI_MODEL_NAME=gpt-4.1
+    secrets:
+      - openai-api-key
+
+secrets:
+  openai-api-key:
+    file: secret.openai-api-key

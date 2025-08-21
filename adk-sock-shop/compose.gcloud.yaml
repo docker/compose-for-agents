@@ -1,0 +1,128 @@
+services:
+
+  # Sock Store
+  #
+  front-end:
+    image: weaveworksdemos/front-end:0.3.12
+    hostname: front-end
+    ports:
+      - 9090:8079
+    restart: always
+    cap_drop:
+      - all
+    read_only: true
+  catalogue:
+    image: roberthouse224/catalogue:amd
+    hostname: catalogue
+    restart: always
+    cap_drop:
+      - all
+    cap_add:
+      - NET_BIND_SERVICE
+    read_only: true
+    ports:
+      - 8081:80
+  catalogue-db:
+    image: weaveworksdemos/catalogue-db:0.3.0
+    hostname: catalogue-db
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_ALLOW_EMPTY_PASSWORD=true
+      - MYSQL_DATABASE=socksdb
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+      - MONGO_INITDB_DATABASE=sockstore
+    volumes:
+      - ./data/mongodb:/docker-entrypoint-initdb.d:ro
+      - mongodb_data:/data/db
+    command: [mongod, --quiet, --logpath, /var/log/mongodb/mongod.log, --logappend, --setParameter, "logComponentVerbosity={network:{verbosity:0}}"]
+    healthcheck:
+      test: [CMD, mongosh, --eval, db.adminCommand('ping')]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Agent
+
+  adk-ui:
+    image: jimclark106/supplier_agent_ui:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.adk-ui
+    ports:
+      - 3000:3000
+    environment:
+      - API_BASE_URL=http://adk:8000
+    depends_on:
+      - adk
+
+  adk:
+    image: jimclark106/supplier_agent:latest
+    build:
+      context: .
+    ports:
+      # expose port for web interface
+      - 8000:8000
+    environment:
+      # point adk at the MCP gateway
+      - MCPGATEWAY_ENDPOINT=http://mcp-gateway:8811/sse
+      - CATALOGUE_URL=http://catalogue:8081
+      - OPENAI_BASE_URL=https://api.openai.com/v1
+      - AI_DEFAULT_MODEL=openai/gpt-4
+      # - OPENAI_MODEL_NAME=gpt4
+    depends_on:
+      - mcp-gateway
+    secrets:
+      - openai-api-key
+    models:
+      qwen3:
+        endpoint_var: MODEL_RUNNER_URL
+        model_var: MODEL_RUNNER_MODEL
+
+  mcp-gateway:
+    # mcp-gateway secures your MCP servers
+    image: docker/mcp-gateway:dind
+    privileged: true
+    ports:
+      - 8811:8811
+    command:
+      - --transport=sse
+      - --servers=fetch,brave,resend,curl,mongodb
+      - --config=/mcp_config
+      - --secrets=docker-desktop:/run/secrets/mcp_secret
+      - --verbose
+    configs:
+      - mcp_config
+    secrets:
+      - mcp_secret
+    depends_on:
+      - mongodb
+
+models:
+  qwen3:
+    # pre-pull the model when starting Docker Model Runner
+    model: ai/qwen3:14B-Q6_K
+    # context_size: 131000  # 35.5 GB VRAM
+
+volumes:
+  mongodb_data:
+
+configs:
+  mcp_config:
+    content: |
+      resend:
+        reply_to: slimslenderslacks@gmail.com
+        sender: slimslenderslacks@slimslenderslacks.com
+
+secrets:
+  openai-api-key:
+    file: secret.openai-api-key
+  mcp_secret:
+    file: ./.mcp.env

@@ -1,0 +1,32 @@
+# .github/workflows/yamllint.yml
+name: Lint YAML
+
+on:
+  push:
+    paths:
+      - "**/*.yaml"
+      - "**/*.yml"
+      - .github/workflows/yamllint.yaml
+    branches:
+      - main
+  pull_request:
+    paths:
+      - "**/*.yaml"
+      - "**/*.yml"
+      - .github/workflows/yamllint.yaml
+
+permissions:
+  contents: read
+
+jobs:
+  lint-yaml:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Install Task
+        uses: arduino/setup-task@8b35f53e4d5a51bf691c94c71f2c7222483206cb
+
+      - name: Lint YAML Files
+        run: task lint:yaml

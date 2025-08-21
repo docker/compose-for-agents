@@ -1,0 +1,8 @@
+/.vscode
+/.venv
+/.mypy_cache
+/.pytest_cache
+/.ruff_cache
+/.python-version
+**/__pycache__/
+.mcp.env

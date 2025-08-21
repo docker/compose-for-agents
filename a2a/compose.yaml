@@ -4,12 +4,14 @@ services:
     build:
       target: auditor-agent
     ports:
-      - "8080:8080"
+      - 8080:8080
     environment:
       - CRITIC_AGENT_URL=http://critic-agent-a2a:8001
       - REVISER_AGENT_URL=http://reviser-agent-a2a:8001
+      - OPENAI_MODEL_NAME=o3
+    secrets:
+      - openai-api-key
     depends_on:
-      # compose docker-model-runner provider injects environment variables
       - critic-agent-a2a
       - reviser-agent-a2a
 
@@ -18,9 +20,10 @@ services:
       target: critic-agent
     environment:
       - MCPGATEWAY_ENDPOINT=http://mcp-gateway:8811/sse
+      - OPENAI_MODEL_NAME=o3
+    secrets:
+      - openai-api-key
     depends_on:
-      # compose docker-model-runner provider injects environment variables
-      - model_runner
       - mcp-gateway
 
   reviser-agent-a2a:
@@ -28,25 +31,23 @@ services:
       target: reviser-agent
     environment:
       - MCPGATEWAY_ENDPOINT=http://mcp-gateway:8811/sse
+      - OPENAI_MODEL_NAME=o3
+    secrets:
+      - openai-api-key
     depends_on:
-      # compose docker-model-runner provider injects environment variables
-      - model_runner
       - mcp-gateway
 
-  model_runner:
-    provider:
-      type: model
-      options:
-        # pre-pull the model on Docker Model Runner
-        model: ai/gemma3-qat:27B-Q4_K_M	
-        context-size: 41000 # 23 GB VRAM
-        # context-size: 80000 # 28 GB VRAM
-        # context-size: 131000 # 36 GB VRAM
-
   mcp-gateway:
-    image: docker/agents_gateway:v2
+    # mcp-gateway secures your MCP servers
+    image: docker/mcp-gateway:latest
+    use_api_socket: true
     command:
       - --transport=sse
       - --servers=duckduckgo
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      # add an MCP interceptor to log the responses
+      - --interceptor
+      - after:exec:echo RESPONSE=$(cat) >&2
+
+secrets:
+  openai-api-key:
+    file: secret.openai-api-key

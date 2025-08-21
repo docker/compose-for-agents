@@ -1,0 +1,40 @@
+name: ADK-CEREBRAS CI
+
+on:
+  push:
+    paths:
+      - .github/workflows/adk-cerebras.yaml
+      - adk-cerebras/**
+    branches:
+      - main
+  pull_request:
+    paths:
+      - .github/workflows/adk-cerebras.yaml
+      - adk-cerebras/**
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Format & Type Check
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: adk-cerebras
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH  # Make uv available
+
+      - name: Check format
+        run: uv run ruff format --check
+
+      - name: Check lint
+        run: uv run ruff check

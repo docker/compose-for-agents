@@ -7,8 +7,8 @@ from langgraph.prebuilt import create_react_agent
 from mcp import ClientSession
 from mcp.client.sse import sse_client
 
-base_url = os.getenv("MODEL_RUNNER_URL")
-model = os.getenv("MODEL_RUNNER_MODEL", "gpt-4.1")
+base_url = os.getenv("OPENAI_API_BASE_URL")
+model = os.getenv("MODEL_NAME")
 mcp_server_url = os.getenv("MCP_SERVER_URL")
 api_key = os.getenv("OPENAI_API_KEY", "does_not_matter")
 

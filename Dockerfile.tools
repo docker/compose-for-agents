@@ -1,0 +1,7 @@
+FROM davidanson/markdownlint-cli2:v0.18.1 AS markdownlint
+
+FROM python:3.13-slim AS yamllint
+RUN pip install yamllint==1.37.1
+WORKDIR /workdir
+ENTRYPOINT [ "yamllint" ]
+CMD []

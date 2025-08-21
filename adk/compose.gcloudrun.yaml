@@ -1,0 +1,10 @@
+services:
+  adk:
+    image: jimclark106/adk:latest
+    pull_policy: always
+
+  mcp-gateway:
+    # agents_gateway secures your MCP servers
+    image: jimclark106/gateway:dind
+    privileged: true
+    volumes: !reset []

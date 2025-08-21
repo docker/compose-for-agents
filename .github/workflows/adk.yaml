@@ -3,14 +3,14 @@ name: ADK CI
 on:
   push:
     paths:
-      - '.github/workflows/adk.yaml'
-      - 'adk/**'
+      - .github/workflows/adk.yaml
+      - adk/**
     branches:
       - main
   pull_request:
     paths:
-      - '.github/workflows/adk.yaml'
-      - 'adk/**'
+      - .github/workflows/adk.yaml
+      - adk/**
 
 permissions:
   contents: read
@@ -41,3 +41,20 @@ jobs:
 
       - name: Check types
         run: uv run pyright
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: adk
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Compose
+        uses: ./.github/actions/setup-compose
+
+      - name: Build Docker images
+        run: docker compose build

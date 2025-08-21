@@ -1,0 +1,4 @@
+models:
+  qwen3:
+    model: ai/qwen3:30B-A3B-Q4_K_M
+    context_size: 41000

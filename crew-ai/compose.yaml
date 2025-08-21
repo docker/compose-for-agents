@@ -1,27 +1,30 @@
 services:
   agents:
     build:
-        context: .
+      context: .
     environment:
-      - MCP_SERVER_URL=http://mcp_gateway:8811/sse
-    restart: no
+      - MCP_SERVER_URL=http://mcp-gateway:8811/sse
+    restart: "no"
     depends_on:
-      - model_runner
-      - mcp_gateway
+      - mcp-gateway
+    models:
+      qwen3:
+        endpoint_var: MODEL_RUNNER_URL
+        model_var: MODEL_RUNNER_MODEL
 
-  mcp_gateway:
-    image: docker/agents_gateway:v2
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
+  mcp-gateway:
+    # mcp-gateway secures your MCP servers
+    image: docker/mcp-gateway:latest
+    use_api_socket: true
     command:
       - --transport=sse
+      # add any MCP servers you want to use
       - --servers=duckduckgo
       - --tools=search,fetch_content
 
-  model_runner:
-    provider:
-      type: model
-      options:
-        model: ai/qwen3
-        runtime-flags: "--no-prefill-assistant"
-        context-size: 8192
+models:
+  qwen3:
+    model: ai/qwen3
+    context_size: 8192
+    runtime_flags:
+      - --no-prefill-assistant

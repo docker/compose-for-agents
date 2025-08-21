@@ -7,18 +7,31 @@ RUN pip install uv
 WORKDIR /app
 COPY pyproject.toml uv.lock ./
 RUN --mount=type=cache,target=/root/.cache/uv \
-    UV_COMPILE_BYTECODE=1 uv pip install --system .
+    UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy \
+    uv pip install --system . && \
+    rm -fr build dist *.egg-info
 COPY main.py src ./
 RUN python -m compileall -q .
 
 ENV AGENT_CONFIG=/app/agent.yaml
 
 COPY <<EOF ./entrypoint.sh
-#!/bin/bash
+#!/bin/sh
 set -e
 
-export LLM_AGENT_API_URL=\${MODEL_RUNNER_URL}
-export LLM_AGENT_MODEL_NAME=\${MODEL_RUNNER_MODEL}
+if test -f /run/secrets/openai-api-key; then
+    export OPENAI_API_KEY=$(cat /run/secrets/openai-api-key)
+fi
+
+if test -n "\${OPENAI_API_KEY}"; then
+    echo "Using OpenAI with \${OPENAI_MODEL_NAME}"
+    export LLM_AGENT_MODEL_PROVIDER=openai
+    export LLM_AGENT_MODEL_NAME=\${OPENAI_MODEL_NAME}
+else
+    echo "Using Docker Model Runner with \${MODEL_RUNNER_MODEL}"
+    export LLM_AGENT_MODEL_PROVIDER=docker
+    export LLM_AGENT_MODEL_NAME=\${MODEL_RUNNER_MODEL}
+fi
 exec \$@
 EOF
 RUN chmod +x ./entrypoint.sh
