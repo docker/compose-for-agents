@@ -51,6 +51,7 @@ The demos support using OpenAI models instead of running models locally with Doc
 | [Spring AI](https://spring.io/projects/spring-ai) Brave Search | Single Agent | none | duckduckgo | [./spring-ai](./spring-ai) | [compose.yaml](./spring-ai/compose.yaml) |
 | [ADK](https://github.com/google/adk-python) Sock Store Agent | Multi-Agent | qwen3 | MongoDb, Brave, Curl,  | [./adk-sock-shop](./adk-sock-shop/) | [compose.yaml](./adk-sock-shop/compose.yaml) |
 | [Langchaingo](https://github.com/tmc/langchaingo) DuckDuckGo Search | Single Agent | gemma3 | duckduckgo | [./langchaingo](./langchaingo) | [compose.yaml](./langchaingo/compose.yaml) |
+| [MinionS](https://github.com/HazyResearch/minions) Cost-Efficient Local-Remote Collaboration | Local-Remote Protocol | qwen3(local), gpt-4o(remote) |  | [./minions](./minions) | [docker-compose.minions.yml](https://github.com/HazyResearch/minions/blob/main/apps/minions-docker/docker-compose.minions.yml) |
 
 ## License
 
