@@ -5,13 +5,6 @@ small on-device models and large cloud models.
 Based on research from Stanford's Hazy Research lab, MinionS achieves **5.7× cost reduction**
 while maintaining **97.9% of cloud model performance**.
 
-<p>
-  <img src="https://github.com/HazyResearch/minions/raw/main/assets/Ollama_minionS_background.png"
-       alt="MinionS Protocol Overview"
-       width="600"
-       style="border: 1px solid #ccc; border-radius: 8px;" />
-</p>
-
 ## 🚀 Getting Started
 
 ### Requirements
