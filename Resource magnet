@@ -1,0 +1,13 @@
+File Read
+src/router/config
+src/router/index
+src/components/feature/Footer
+src/pages/home/components/HeroSection
+src/pages/home/components/ServicesSection
+src/pages/home/components/AboutSection
+src/pages/home/components/ContactSection
+src/pages/home/components/AffiliateSection
+src/pages/NotFound
+src/index
+tailwind.config
+vite.config
