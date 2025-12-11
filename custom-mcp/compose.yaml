@@ -6,6 +6,17 @@ services:
       - mcp-gateway
     command: ["/bin/sh", "-lc", "curl -sS http://mcp-gateway:8811/health || sleep 3600"]
 
+  ui:
+    build:
+      context: ./ui
+    environment:
+      - MCP_GATEWAY_URL=http://mcp-gateway:8811
+      - MCP_SERVERS=duckduckgo,github-official,brave,wikipedia-mcp,postgres
+    ports:
+      - "8088:8080"
+    depends_on:
+      - mcp-gateway
+
   mcp-gateway:
     # Secures and launches MCP servers via the Docker API socket
     image: docker/mcp-gateway:latest
