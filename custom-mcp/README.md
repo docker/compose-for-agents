@@ -35,3 +35,14 @@ Included servers & secrets
 Notes
 - The example includes a minimal curl-based `mcp-client` container that checks gateway health.
 - To integrate with an agent, set its MCP server URL to the gateway endpoint, e.g. `http://mcp-gateway:8811/sse` for SSE transport.
+
+Agent integration patterns
+- LangGraph/LangChain: set MCP endpoint env (e.g., MCP_SERVER_URL=http://mcp-gateway:8811/sse) in your agent container.
+- Agno/ADK: point to MCP gateway URL (SSE or streaming) as shown in existing examples in this repo.
+- UI frontends (e.g., Vercel AI SDK demo): configure your backend/agent server to call the gateway; avoid exposing gateway publicly.
+
+Troubleshooting
+- 401/403 from servers: ensure tokens (e.g., GITHUB_TOKEN, BRAVE_API_KEY) are present in .mcp.env and mapped via --secrets if required.
+- Postgres errors: verify postgres_url content is a valid DSN and the DB is reachable from the gateway container.
+- Port already in use: change ports mapping under mcp-gateway, e.g., "8812:8811", and curl http://localhost:8812/health.
+- CI differences: CI uses compose.ci.yaml override with only duckduckgo and wikipedia (no secrets, no Docker API socket).

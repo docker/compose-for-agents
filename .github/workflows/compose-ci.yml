@@ -1,0 +1,46 @@
+name: Compose CI
+
+on:
+  push:
+    branches: [ "**" ]
+  pull_request:
+    branches: [ "**" ]
+
+jobs:
+  compose-validate:
+    name: Compose config validation (custom-mcp)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Docker version
+        run: docker version
+      - name: Compose config
+        run: |
+          docker compose -f custom-mcp/compose.yaml -f custom-mcp/compose.ci.yaml config
+        working-directory: agents/compose-for-agents
+
+  e2e-health:
+    name: E2E health check (custom-mcp)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Start stack
+        run: |
+          docker compose -f custom-mcp/compose.yaml -f custom-mcp/compose.ci.yaml up -d
+        working-directory: agents/compose-for-agents
+      - name: Wait for health
+        run: |
+          for i in $(seq 1 30); do
+            if curl -fsS http://localhost:8811/health; then
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Gateway health check failed" >&2
+          docker compose -f custom-mcp/compose.yaml -f custom-mcp/compose.ci.yaml logs || true
+          exit 1
+        working-directory: agents/compose-for-agents
+      - name: Teardown
+        if: always()
+        run: docker compose -f custom-mcp/compose.yaml -f custom-mcp/compose.ci.yaml down -v --remove-orphans
+        working-directory: agents/compose-for-agents
