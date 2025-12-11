@@ -17,15 +17,20 @@ services:
       - --transport=sse
       # secrets can be provided multiple times and referenced per server
       - --secrets=docker-desktop:/run/secrets/mcp_secret
+      # For Postgres DSN
+      - --secrets=/run/secrets/database-url
       # Enable the servers you need. Add/remove as desired.
       # Built-in servers supported by gateway include e.g. duckduckgo, github-official, postgres
       - --servers=duckduckgo
       - --servers=github-official
-      # Example Postgres tool (requires POSTGRES_URL in secrets)
-      # - --servers=postgres
-      # - --tools=query
+      - --servers=brave
+      - --servers=wikipedia-mcp
+      # Postgres server and SQL tool (requires database-url secret file)
+      - --servers=postgres
+      - --tools=query
     secrets:
       - mcp_secret
+      - database-url
 
 # Example model configuration if you want to co-run with Docker Model Runner
 # and point an agent to it. Not strictly required for MCP Gateway testing.
@@ -38,3 +43,5 @@ services:
 secrets:
   mcp_secret:
     file: ./.mcp.env
+  database-url:
+    file: ./postgres_url

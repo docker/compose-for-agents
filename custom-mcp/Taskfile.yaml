@@ -1,0 +1,27 @@
+version: "3"
+
+tasks:
+  up:
+    desc: Start custom MCP stack
+    cmds:
+      - docker compose up --build
+    dir: .
+
+  down:
+    desc: Stop and remove containers
+    cmds:
+      - docker compose down -v --remove-orphans
+    dir: .
+
+  build:
+    desc: Build images
+    cmds:
+      - docker compose build
+    dir: .
+
+  clean:
+    desc: Clean everything
+    cmds:
+      - docker compose down -v --remove-orphans
+      - docker builder prune -f
+    dir: .
