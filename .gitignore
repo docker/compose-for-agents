@@ -5,3 +5,5 @@
 /.cursor/
 **/init-secrets.sh
 **/secret.openai-api-key
+**/.mcp.env
+**/postgres_url
