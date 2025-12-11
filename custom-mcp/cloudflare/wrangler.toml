@@ -1,0 +1,41 @@
+name = "custom-mcp-ui"
+main = "src/worker.ts"
+compatibility_date = "2024-11-05"
+# Uncomment and set your account ID or pass via env
+# account_id = "YOUR_ACCOUNT_ID"
+
+[vars]
+# Public base URL used by the Worker to reach your MCP Gateway
+# If your gateway is publicly reachable, set e.g. https://gateway.example.com
+# Otherwise, if using Cloudflare Containers service bindings, we will switch to service bindings later.
+GATEWAY_URL = "https://YOUR_GATEWAY_URL"
+
+[durable_objects]
+bindings = [
+  { name = "SESSION_DO", class_name = "SessionDurable" }
+]
+
+[[migrations]]
+tag = "v1"
+new_classes = ["SessionDurable"]
+
+[[kv_namespaces]]
+binding = "UI_STATE"
+id = ""
+# preview_id = "" # optional
+
+[[r2_buckets]]
+binding = "ASSETS_BUCKET"
+bucket_name = ""
+
+[[d1_databases]]
+binding = "MCP_DB"
+database_name = ""
+database_id = ""
+
+# If using service bindings to a Cloudflare Container named "mcp-gateway",
+# you can uncomment the following once provisioned.
+# [services]
+# bindings = [
+#   { binding = "MCP_GATEWAY", service = "mcp-gateway" }
+# ]
