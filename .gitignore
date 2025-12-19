@@ -5,3 +5,4 @@
 /.cursor/
 **/init-secrets.sh
 **/secret.openai-api-key
+runledger_out/

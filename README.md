@@ -70,3 +70,14 @@ made by Docker in this repository.
 [Docker Engine]: https://docs.docker.com/engine/
 [Docker Model Runner requirements]: https://docs.docker.com/ai/model-runner/
 [Docker Offload]: https://www.docker.com/products/docker-offload/
+
+## RunLedger CI gate
+
+This repo includes a deterministic CI gate for tool-using agents:
+
+```bash
+runledger run evals/runledger --mode replay --baseline baselines/runledger-demo.json
+```
+
+It replays recorded tool calls and fails the PR on schema/tool/budget regressions.
+
