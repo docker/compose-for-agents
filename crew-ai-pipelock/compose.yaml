@@ -1,0 +1,55 @@
+services:
+  agent:
+    build:
+      context: .
+    environment:
+      - MCP_SERVER_URL=http://mcp-gateway:8811/sse
+      - PIPELOCK_FETCH_URL=http://pipelock:8888/fetch
+    restart: "no"
+    networks:
+      - agent-net
+    depends_on:
+      pipelock:
+        condition: service_healthy
+      mcp-gateway:
+        condition: service_started
+    models:
+      qwen3:
+        endpoint_var: MODEL_RUNNER_URL
+        model_var: MODEL_RUNNER_MODEL
+
+  pipelock:
+    image: ghcr.io/luckypipewrench/pipelock:0.2.2
+    command: [run, --config, /etc/pipelock/pipelock.yaml]
+    volumes:
+      - ./pipelock.yaml:/etc/pipelock/pipelock.yaml:ro
+    networks:
+      - agent-net
+      - default
+    healthcheck:
+      test: [CMD, /pipelock, healthcheck]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 2s
+
+  mcp-gateway:
+    image: docker/mcp-gateway:latest
+    use_api_socket: true
+    command:
+      - --transport=sse
+      - --servers=duckduckgo
+      - --tools=search,fetch_content
+    networks:
+      - agent-net
+
+networks:
+  agent-net:
+    internal: true
+
+models:
+  qwen3:
+    model: ai/qwen3
+    context_size: 8192
+    runtime_flags:
+      - --no-prefill-assistant

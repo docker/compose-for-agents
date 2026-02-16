@@ -1,0 +1,111 @@
+# Pipelock config for Docker Compose sidecar
+# Based on balanced preset with listen address adjusted for containers.
+
+version: 1
+mode: balanced
+
+fetch_proxy:
+  listen: 0.0.0.0:8888
+  timeout_seconds: 30
+  max_response_mb: 10
+  user_agent: Pipelock Fetch/1.0
+  monitoring:
+    max_url_length: 2048
+    entropy_threshold: 4.5
+    max_requests_per_minute: 60
+    blocklist:
+      - "*.pastebin.com"
+      - "*.hastebin.com"
+      - "*.paste.ee"
+      - "*.transfer.sh"
+      - "*.file.io"
+      - "*.requestbin.com"
+
+dlp:
+  scan_env: true
+  patterns:
+    - name: Anthropic API Key
+      regex: sk-ant-[a-zA-Z0-9\-_]{20,}
+      severity: critical
+    - name: OpenAI API Key
+      regex: sk-proj-[a-zA-Z0-9\-_]{20,}
+      severity: critical
+    - name: GitHub Token
+      regex: gh[ps]_[A-Za-z0-9_]{36,}
+      severity: critical
+    - name: Slack Token
+      regex: xox[bpras]-[0-9a-zA-Z-]{15,}
+      severity: critical
+    - name: AWS Access Key
+      regex: AKIA[0-9A-Z]{16}
+      severity: critical
+    - name: Discord Bot Token
+      regex: "[MN][A-Za-z0-9]{23,}\\.[A-Za-z0-9\\-_]{6}\\.[A-Za-z0-9\\-_]{27,}"
+      severity: critical
+    - name: Private Key Header
+      regex: -----BEGIN\s+(RSA\s+|EC\s+|DSA\s+|OPENSSH\s+)?PRIVATE\s+KEY-----
+      severity: critical
+    - name: GitHub Fine-Grained PAT
+      regex: github_pat_[a-zA-Z0-9_]{36,}
+      severity: critical
+    - name: OpenAI Service Key
+      regex: sk-svcacct-[a-zA-Z0-9\-]{20,}
+      severity: critical
+    - name: Stripe Key
+      regex: "[sr]k_(live|test)_[a-zA-Z0-9]{20,}"
+      severity: critical
+    - name: Google OAuth Token
+      regex: ya29\.[a-zA-Z0-9_-]{20,}
+      severity: critical
+    - name: Twilio API Key
+      regex: SK[a-f0-9]{32}
+      severity: high
+    - name: SendGrid API Key
+      regex: SG\.[a-zA-Z0-9_-]{22}\.[a-zA-Z0-9_-]{43}
+      severity: critical
+    - name: Mailgun API Key
+      regex: key-[a-zA-Z0-9]{32}
+      severity: high
+
+response_scanning:
+  enabled: true
+  action: warn
+  patterns:
+    - name: Prompt Injection
+      regex: (?i)(ignore|disregard|forget)\s+(all\s+)?(previous|prior|above)\s+(instructions|prompts|rules|context)
+    - name: System Override
+      regex: "(?im)^\\s*system\\s*:"
+    - name: Role Override
+      regex: (?i)you\s+are\s+(now\s+)?(a\s+)?(DAN|evil|unrestricted|jailbroken|unfiltered)
+    - name: New Instructions
+      regex: (?i)(new|updated|revised)\s+(instructions|directives|rules|prompt)
+    - name: Jailbreak Attempt
+      regex: (?i)(DAN|developer\s+mode|sudo\s+mode|unrestricted\s+mode)
+    - name: Hidden Instruction
+      regex: (?i)(do\s+not\s+(reveal|tell|show|display|mention)\s+this\s+to\s+the\s+user|hidden\s+instruction|invisible\s+to\s+(the\s+)?user|the\s+user\s+(cannot|must\s+not|should\s+not)\s+see\s+this)
+    - name: Behavior Override
+      regex: (?i)from\s+now\s+on\s+(you\s+)?(will|must|should|shall)\s+
+    - name: Encoded Payload
+      regex: (?i)(decode\s+(this|the\s+following)\s+(from\s+)?base64\s+and\s+(execute|run|follow)|eval\s*\(\s*atob\s*\()
+    - name: Tool Invocation
+      regex: (?i)you\s+must\s+(immediately\s+)?(call|execute|run|invoke)\s+(the|this)\s+(function|tool|command|api|endpoint)
+    - name: Authority Escalation
+      regex: (?i)you\s+(now\s+)?have\s+(full\s+)?(admin|root|system|superuser|elevated)\s+(access|privileges|permissions|rights)
+
+logging:
+  format: json
+  output: stdout
+  include_allowed: true
+  include_blocked: true
+
+internal:
+  - 0.0.0.0/8
+  - 127.0.0.0/8
+  - 10.0.0.0/8
+  - 172.16.0.0/12
+  - 192.168.0.0/16
+  - 169.254.0.0/16
+  - 100.64.0.0/10
+  - ::1/128
+  - fc00::/7
+  - fe80::/10

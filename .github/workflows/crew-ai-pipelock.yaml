@@ -1,0 +1,66 @@
+name: Crew AI Pipelock CI
+
+on:
+  push:
+    paths:
+      - .github/workflows/crew-ai-pipelock.yaml
+      - crew-ai-pipelock/**
+    branches:
+      - main
+  pull_request:
+    paths:
+      - .github/workflows/crew-ai-pipelock.yaml
+      - crew-ai-pipelock/**
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Format, Lint and Type Check
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: crew-ai-pipelock
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install poetry
+        run: pipx install poetry
+
+      - name: Install dependencies
+        run: poetry install --with dev
+
+      - name: Check format
+        run: poetry run ruff format --check
+
+      - name: Check lint
+        run: poetry run ruff check
+
+      - name: Check types
+        run: poetry run pyright
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: crew-ai-pipelock
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Compose
+        uses: ./.github/actions/setup-compose
+
+      - name: Build Docker images
+        run: docker compose build
