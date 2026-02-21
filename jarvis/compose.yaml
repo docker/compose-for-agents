@@ -1,0 +1,24 @@
+services:
+  jarvis:
+    build: .
+    # Interactive terminal session
+    stdin_open: true
+    tty: true
+    environment:
+      # Pass ANTHROPIC_API_KEY from your shell, or use secret file below
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - NOTES_DIR=/data/notes
+    volumes:
+      # Notes persist across container restarts
+      - jarvis-notes:/data/notes
+    secrets:
+      - anthropic-api-key
+
+secrets:
+  anthropic-api-key:
+    # Create this file with your Anthropic API key:
+    #   echo "sk-ant-..." > secret.anthropic-api-key
+    file: ./secret.anthropic-api-key
+
+volumes:
+  jarvis-notes:
