@@ -25,7 +25,7 @@ MODEL_NAME = os.environ["MODEL_NAME"]
 API_KEY = os.environ.get("OPENAI_API_KEY", "cannot_be_empty")
 
 llm_config = LLMConfig(
-    config_list=[{"model": MODEL_NAME, "base_url": MODEL_BASE_URL, "api_key": API_KEY}],
+    {"model": MODEL_NAME, "base_url": MODEL_BASE_URL, "api_key": API_KEY},
     temperature=0.3,
 )
 
@@ -107,7 +107,11 @@ async def research_topic(message: str, history: list) -> AsyncGenerator[str, Non
                 last_count = len(current)
             await asyncio.sleep(0.3)
 
-        await task  # propagate any exceptions from the chat
+        try:
+            await task
+        except Exception as exc:
+            accumulated.append(f"**error:** {exc}")
+            yield "\n\n---\n\n".join(accumulated)
 
 
 demo = gr.ChatInterface(
