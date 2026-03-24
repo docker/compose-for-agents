@@ -2,7 +2,7 @@ FROM node
 
 WORKDIR /app
 
-RUN npm install --global corepack@latest
+RUN npm install --global corepack@latest --force
 RUN corepack enable pnpm 
 
 COPY package.json pnpm-lock.yaml ./

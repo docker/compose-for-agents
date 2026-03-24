@@ -32,7 +32,7 @@ services:
 
   mcp-gateway:
     # mcp-gateway secures your MCP servers
-    image: docker/mcp-gateway:latest
+    image: docker/mcp-gateway:v2
     # use docker API socket to start MCP servers
     use_api_socket: true
     command:
