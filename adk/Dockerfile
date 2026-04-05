@@ -1,6 +1,8 @@
-# Use Python 3.11 slim image as base
+# Use Python 3.13 slim image as base
 FROM python:3.13-slim
 ENV PYTHONUNBUFFERED=1
+ENV UV_PROJECT_ENVIRONMENT=/app/.venv
+ENV PATH="/app/.venv/bin:$PATH"
 
 RUN pip install uv
 
@@ -9,8 +11,7 @@ WORKDIR /app
 COPY pyproject.toml uv.lock ./
 RUN --mount=type=cache,target=/root/.cache/uv \
     UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy \
-    uv pip install --system . && \
-    rm -fr build dist *.egg-info
+    uv sync --locked --no-dev --no-install-project
 # Copy application code
 COPY agents/ ./agents/
 RUN python -m compileall -q .

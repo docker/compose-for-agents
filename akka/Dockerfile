@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21.0.1_12-jdk-jammy
+FROM eclipse-temurin:25-jdk-jammy
 WORKDIR /app
 RUN apt-get update && apt-get install -y maven && \
     rm -rf /var/lib/apt/lists/*

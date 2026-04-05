@@ -4,7 +4,7 @@
   <parent>
     <groupId>io.akka</groupId>
     <artifactId>akka-javasdk-parent</artifactId>
-    <version>3.4.6</version>
+    <version>3.5.4</version>
     <relativePath/>
   </parent>
 
@@ -14,5 +14,24 @@
   <packaging>jar</packaging>
 
   <name>helloworld-agent</name>
+
+  <repositories>
+    <repository>
+      <id>akka-repository</id>
+      <name>Akka Repository</name>
+      <!-- This resolver must not be used for other builds outside of this sample -->
+      <!-- Please fetch your resolver token at https://account.akka.io/token -->
+      <url>https://repo.akka.io/maven/docker-compose</url>
+    </repository>
+  </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>akka-repository</id>
+      <name>Akka Repository</name>
+      <!-- This resolver must not be used for other builds outside of this sample -->
+      <!-- Please fetch your resolver token at https://account.akka.io/token -->
+      <url>https://repo.akka.io/maven/docker-compose</url>
+    </pluginRepository>
+  </pluginRepositories>
 
 </project>
