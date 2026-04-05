@@ -1,7 +1,11 @@
-# 🧠 ADK Multi-Agent Fact Checker
+# 🛒 ADK Sock Store Agent
 
-> [!Tip]
-> ✨ No configuration needed — run it with a single command.
+This demo shows how to use [Google ADK](https://google.github.io/adk-docs/) to build a
+multi-agent sock vendor onboarding system. A supplier submits their product details via a
+web portal; a pipeline of specialized agents then researches the vendor online (via Brave
+Search), matches products against historical buyer data (via MongoDB), and automatically
+adds approved items to the store catalog (via curl). The full system runs locally with
+Docker Compose and Docker Model Runner.
 
 # 🚀 Getting Started
 
