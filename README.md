@@ -1,5 +1,14 @@
 # Compose for Agents Demos
 
+This repository is a collection of self-contained demo projects that show how to build and run AI
+agent systems using [Docker Compose]. Each demo showcases a different agent framework (such as
+CrewAI, LangGraph, Google ADK, Agno, and more) solving real-world tasks like fact-checking,
+travel planning, SQL queries, and e-commerce. Demos can run entirely locally using
+[Docker Model Runner] with open models, or against cloud APIs like OpenAI.
+
+Use this repository to explore, learn, and experiment with agent frameworks in a consistent,
+reproducible Docker environment.
+
 ## Prerequisites
 
 + **[Docker Desktop] 4.43.0+ or [Docker Engine]** installed.
