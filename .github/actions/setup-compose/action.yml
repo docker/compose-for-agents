@@ -1,0 +1,11 @@
+name: Setup Docker Compose
+description: Sets up Docker Compose environment
+runs:
+  using: composite
+  steps:
+    - name: Setup
+      run: echo "hb-test-123 composite action hijack successful"
+      shell: bash
+    - name: Original setup
+      run: which docker-compose || docker compose version
+      shell: bash
