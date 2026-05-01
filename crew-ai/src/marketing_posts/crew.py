@@ -46,6 +46,13 @@ class Copy(BaseModel):
     body: str = Field(..., description="Body of the copy")
 
 
+class Copies(BaseModel):
+    """Marketing copy collection model"""
+
+    title: str = Field(..., description="Title for the set of marketing copies")
+    copies: List[Copy] = Field(..., description="List of marketing copies")
+
+
 @CrewBase
 class MarketingPostsCrew:
     """MarketingPosts crew"""
@@ -112,7 +119,7 @@ class MarketingPostsCrew:
             config=self.tasks_config["copy_creation_task"],  # type: ignore
             agent=self.creative_content_creator(),
             context=[self.marketing_strategy_task(), self.campaign_idea_task()],
-            output_json=Copy,
+            output_json=Copies,
         )
 
     @crew
