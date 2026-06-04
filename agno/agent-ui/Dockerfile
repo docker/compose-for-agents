@@ -2,6 +2,7 @@ FROM node
 
 WORKDIR /app
 
+COPY .npmrc .
 RUN npm install --global corepack@latest
 RUN corepack enable pnpm 
 
