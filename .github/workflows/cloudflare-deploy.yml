@@ -1,0 +1,32 @@
+name: Deploy Cloudflare Worker (Custom MCP UI)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "feature/customizations" ]
+    paths:
+      - 'custom-mcp/cloudflare/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install wrangler
+        run: npm i -g wrangler@^3.90.0
+
+      - name: Deploy
+        working-directory: agents/compose-for-agents/custom-mcp/cloudflare
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: wrangler deploy --var GATEWAY_URL:${{ secrets.MCP_GATEWAY_URL }}

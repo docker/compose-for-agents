@@ -1,0 +1,12 @@
+services:
+  mcp-gateway:
+    # In CI, avoid using Docker API socket and any external secrets.
+    # Only enable servers that require no credentials.
+    use_api_socket: false
+    ports:
+      - "8811:8811"
+    command:
+      - --transport=sse
+      - --servers=duckduckgo
+      - --servers=wikipedia-mcp
+    secrets: []

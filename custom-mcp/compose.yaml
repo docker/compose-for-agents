@@ -1,0 +1,58 @@
+services:
+  # Minimal test client to verify the MCP Gateway is reachable.
+  mcp-client:
+    image: curlimages/curl:8.11.1
+    depends_on:
+      - mcp-gateway
+    command: ["/bin/sh", "-lc", "curl -sS http://mcp-gateway:8811/health || sleep 3600"]
+
+  ui:
+    build:
+      context: ./ui
+    environment:
+      - MCP_GATEWAY_URL=http://mcp-gateway:8811
+      - MCP_SERVERS=duckduckgo,github-official,brave,wikipedia-mcp,postgres
+    ports:
+      - "8088:8080"
+    depends_on:
+      - mcp-gateway
+
+  mcp-gateway:
+    # Secures and launches MCP servers via the Docker API socket
+    image: docker/mcp-gateway:latest
+    use_api_socket: true
+    ports:
+      - "8811:8811"
+    command:
+      # switch between streaming or sse depending on your agent
+      - --transport=sse
+      # secrets can be provided multiple times and referenced per server
+      - --secrets=docker-desktop:/run/secrets/mcp_secret
+      # For Postgres DSN
+      - --secrets=/run/secrets/database-url
+      # Enable the servers you need. Add/remove as desired.
+      # Built-in servers supported by gateway include e.g. duckduckgo, github-official, postgres
+      - --servers=duckduckgo
+      - --servers=github-official
+      - --servers=brave
+      - --servers=wikipedia-mcp
+      # Postgres server and SQL tool (requires database-url secret file)
+      - --servers=postgres
+      - --tools=query
+    secrets:
+      - mcp_secret
+      - database-url
+
+# Example model configuration if you want to co-run with Docker Model Runner
+# and point an agent to it. Not strictly required for MCP Gateway testing.
+# models:
+#   qwen3-small:
+#     model: ai/qwen3:8B-Q4_0
+#     context_size: 15000
+
+# Mount the secrets file used by MCP servers
+secrets:
+  mcp_secret:
+    file: ./.mcp.env
+  database-url:
+    file: ./postgres_url
