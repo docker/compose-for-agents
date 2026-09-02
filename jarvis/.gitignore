@@ -1,0 +1,4 @@
+secret.anthropic-api-key
+__pycache__/
+*.pyc
+.env
