@@ -1,0 +1,30 @@
+services:
+  agent:
+    build:
+      context: .
+    ports:
+      # Gradio browser UI
+      - 7860:7860
+    environment:
+      - MCP_SERVER_URL=http://mcp-gateway:8811/sse
+    depends_on:
+      - mcp-gateway
+    models:
+      qwen3:
+        endpoint_var: MODEL_RUNNER_URL
+        model_var: MODEL_RUNNER_MODEL
+
+  mcp-gateway:
+    image: docker/mcp-gateway:latest
+    use_api_socket: true
+    command:
+      - --transport=sse
+      - --servers=duckduckgo
+      - --tools=search
+
+models:
+  qwen3:
+    model: ai/qwen3:8B-Q4_0
+    context_size: 8192
+    runtime_flags:
+      - --no-prefill-assistant

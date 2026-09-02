@@ -1,0 +1,8 @@
+/secret.*
+/.vscode
+/.venv
+/.mypy_cache
+/.ruff_cache
+/.python-version
+__pycache__
+*.pyc
