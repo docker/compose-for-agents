@@ -401,8 +401,8 @@ github.com/tklauser/numcpus v0.10.0 h1:18njr6LDBk1zuna922MgdjQuJFjrdppsZG60sHGfj
 github.com/tklauser/numcpus v0.10.0/go.mod h1:BiTKazU708GQTYF4mB+cmlpT2Is1gLk7XVuEeem8LsQ=
 github.com/tmc/langchaingo v0.1.14-0.20250628230912-c2f9ad7f3448 h1:AX1pyIZHIaQhCxn9LfTDzMQIiDVqWKL75NftDmYKcBI=
 github.com/tmc/langchaingo v0.1.14-0.20250628230912-c2f9ad7f3448/go.mod h1:TTXqF3g3trelaRo3eWC7WXYKU7P5lOpI2mlOTDAjgzo=
-github.com/weaviate/weaviate v1.32.1 h1:S2LoY2CkKah1UalQJQO4nNinUPXwu/B/sHiz6ZdcE/I=
-github.com/weaviate/weaviate v1.32.1/go.mod h1:ntIKpDWXW0z2yYwZgGU/tIfG01BPWv2SRIGED1XtUX4=
+github.com/weaviate/weaviate v1.32.16 h1:jrQxH9d6Yh8UYeE8bV7iBGxR0l2XujX3atJR1LelHVo=
+github.com/weaviate/weaviate v1.32.16/go.mod h1:ThZt5N8/RpP+fTtUVjifDXGS5dcyHz1x9r1C0nlCzgk=
 github.com/weaviate/weaviate-go-client/v5 v5.4.1 h1:hfKocGPe11IUr4XsLp3q9hJYck0I2yIHGlFBpLqb/F4=
 github.com/weaviate/weaviate-go-client/v5 v5.4.1/go.mod h1:l72EnmCLj9LCQkR8S7nN7Y1VqGMmL3Um8exhFkMmfwk=
 github.com/x-cray/logrus-prefixed-formatter v0.5.2 h1:00txxvfBM9muc0jiLIEAkAcIMJzfthRT6usrui8uGmg=

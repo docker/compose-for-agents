@@ -91,7 +91,7 @@ require (
 	github.com/testcontainers/testcontainers-go/modules/socat v0.37.0 // indirect
 	github.com/tklauser/go-sysconf v0.3.15 // indirect
 	github.com/tklauser/numcpus v0.10.0 // indirect
-	github.com/weaviate/weaviate v1.32.1 // indirect
+	github.com/weaviate/weaviate v1.32.16 // indirect
 	github.com/weaviate/weaviate-go-client/v5 v5.4.1 // indirect
 	github.com/yargevad/filepathx v1.0.0 // indirect
 	github.com/yosida95/uritemplate/v3 v3.0.2 // indirect
