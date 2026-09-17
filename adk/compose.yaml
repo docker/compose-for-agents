@@ -21,6 +21,8 @@ services:
     use_api_socket: true
     command:
       - --transport=sse
+      # the gateway is only reachable inside this Compose network
+      - --allow-unauthenticated
       # add any MCP servers you want to use
       - --servers=duckduckgo
 
