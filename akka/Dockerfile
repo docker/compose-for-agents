@@ -1,7 +1,5 @@
-FROM eclipse-temurin:25-jdk-jammy
+FROM maven:3.9.15-eclipse-temurin-25
 WORKDIR /app
-RUN apt-get update && apt-get install -y maven && \
-    rm -rf /var/lib/apt/lists/*
 COPY pom.xml .
 RUN --mount=type=cache,target=/root/.m2/repository \
     mvn -B -q -DskipTests dependency:go-offline
