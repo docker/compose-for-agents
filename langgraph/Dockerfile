@@ -1,5 +1,5 @@
 FROM alpine:3.22 AS importer
-RUN apk add --no-cache pgloader
+RUN apk add --no-cache 'ca-certificates>=20261020-r0' pgloader
 COPY <<EOF /entrypoint.sh
 #!/bin/sh
 set -xe
@@ -8,9 +8,14 @@ EOF
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT [ "/entrypoint.sh" ]
 
-FROM python:3.13-slim AS agent
+FROM python:3.13-slim-trixie AS agent
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates && \
+    dpkg --compare-versions "$(dpkg-query -W -f='${Version}' ca-certificates)" ge '20250419+deb13u1' && \
+    rm -rf /var/lib/apt/lists/*
+RUN python -m pip install --no-cache-dir 'pip>=26.2.2'
 ENV PYTHONUNBUFFERED=1
-RUN pip install uv
+RUN pip install --no-cache-dir uv==0.13.4
 
 WORKDIR /app
 COPY pyproject.toml uv.lock ./

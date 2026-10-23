@@ -5,6 +5,7 @@ description = "ADK agent demo with Docker Compose"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "certifi>=2026.10.19",
     "google-adk>=1.5.0",
     "litellm==1.73.2",
 ]
