@@ -1,10 +1,10 @@
 # ---- Stage 1: Build the app ----
-FROM golang:1.24.1-alpine AS builder
+FROM golang:1.26.10-alpine AS builder
 
 WORKDIR /build
 
 # Install ca-certificates for HTTPS requests
-RUN apk --no-cache add ca-certificates
+RUN apk --no-cache add 'ca-certificates>=20261020-r0'
 
 # Only copy metadata first to cache dependencies
 COPY go.mod go.sum ./
@@ -18,10 +18,10 @@ COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags '-extldflags "-static"' -tags timetzdata -o app .
 
 # ---- Stage 2: Runtime image ----
-FROM alpine:3.19 AS app
+FROM alpine:3.22 AS app
 
 # Install ca-certificates for HTTPS requests and timezone data
-RUN apk --no-cache add ca-certificates tzdata
+RUN apk --no-cache add 'ca-certificates>=20261020-r0' tzdata
 
 WORKDIR /app
 

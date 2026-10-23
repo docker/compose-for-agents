@@ -10,6 +10,9 @@
   support is enabled) and the necessary drivers are installed.
 + If you're using Docker Engine on Linux, ensure you have [Docker Compose] 2.38.1 or later installed.
 
+For certificate trust updates and rebuilding existing images, see
+[Refreshing example certificate trust](docs/certificate-trust.md).
+
 ## Demos
 
 Each of these demos is self-contained and can be run either locally or using a cloud context. They

@@ -1,9 +1,14 @@
-FROM python:3.13-slim
+FROM python:3.13-slim-trixie
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates && \
+    dpkg --compare-versions "$(dpkg-query -W -f='${Version}' ca-certificates)" ge '20250419+deb13u1' && \
+    rm -rf /var/lib/apt/lists/*
+RUN python -m pip install --no-cache-dir 'pip>=26.2.2'
 ENV PYTHONUNBUFFERED=1
 RUN apt-get update && apt-get install -y --no-install-recommends \
     socat \
     && rm -rf /var/lib/apt/lists/*
-RUN pip install uv
+RUN pip install --no-cache-dir uv==0.13.4
 
 WORKDIR /app
 COPY pyproject.toml uv.lock ./

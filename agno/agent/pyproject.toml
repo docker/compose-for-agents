@@ -5,6 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "certifi>=2026.10.19",
     "agno>=1.7.0",
     "fastapi>=0.115.14",
     "mcp>=1.10.1",

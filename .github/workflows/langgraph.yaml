@@ -19,6 +19,8 @@ jobs:
   check:
     name: Format & Type Check
     runs-on: ubuntu-latest
+    env:
+      UV_PYTHON: "3.13"
 
     defaults:
       run:
